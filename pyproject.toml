@@ -12,4 +12,7 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "pytest-asyncio>=0.25.3",
     "pytest>=8.3.4",
+    "django>=4.2.18",
+    "twisted>=23.10.0",
+    "django-model-utils>=5.0.0",
 ]

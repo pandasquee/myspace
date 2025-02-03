@@ -1,4 +1,4 @@
-modules = ["python-3.11", "postgresql-16"]
+modules = ["python-3.11", "postgresql-16", "python3"]
 
 [nix]
 channel = "stable-24_05"
@@ -28,6 +28,10 @@ args = "Space Engine"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "Core Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Evennia Server"
 
 [[workflows.workflow]]
 name = "Space Engine Test"
@@ -239,7 +243,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd myspace && evennia -l DEBUG migrate && evennia -l DEBUG start"
+args = "cd myspace && PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings evennia migrate && PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings evennia start"
 waitForPort = 80
 
 [[workflows.workflow]]
