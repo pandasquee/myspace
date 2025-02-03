@@ -243,7 +243,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd myspace && PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings evennia migrate && PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings evennia start"
+args = "cd myspace &&     PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings python manage.py migrate contenttypes --verbosity 0 &&     PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings python manage.py migrate auth --verbosity 0 &&     PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings python manage.py migrate admin --verbosity 0 &&     PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings python manage.py migrate sessions --verbosity 0 &&     PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings python manage.py migrate --verbosity 0 &&     PYTHONPATH=. DJANGO_SETTINGS_MODULE=server.conf.settings evennia start"
 waitForPort = 80
 
 [[workflows.workflow]]
