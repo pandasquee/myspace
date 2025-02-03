@@ -1,0 +1,70 @@
+Your test failures are happening because pytest is treating your fixture as a coroutine instead of executing it. This is why you're getting the error:
+
+csharp
+Copy
+Edit
+AttributeError: 'coroutine' object has no attribute 'add_event'
+✅ Immediate Fix: Use @pytest_asyncio.fixture for Async Fixtures
+Your event_manager fixture is an async function but is not awaited properly.
+
+🔥 Fix your event_manager fixture in test_priority_manager.py:
+python
+Copy
+Edit
+import pytest
+import pytest_asyncio
+import asyncio
+from managers.events.priority_manager import PriorityEventManager
+
+@pytest_asyncio.fixture
+async def event_manager():
+    """Fixture providing a clean async event manager for each test"""
+    return PriorityEventManager()
+
+@pytest.mark.asyncio
+async def test_event_priorities(event_manager):
+    """Test that events are processed in priority order"""
+    results = []
+
+    def callback(value):
+        results.append(value)
+
+    event_manager.add_event(callback, SystemPriority.MISC, 0, 3)
+
+    # Run the event processing loop
+    await asyncio.sleep(0.1)  
+    assert results == [3]  # Modify based on expected behavior
+✅ Explanation of Fix
+@pytest_asyncio.fixture is used instead of @pytest.fixture
+
+This tells pytest-asyncio that event_manager is an async fixture.
+Without this, pytest treats the fixture as a coroutine, causing "coroutine object has no attribute" errors.
+Each test method must be async def
+
+This ensures tests run inside an async event loop.
+await asyncio.sleep(0.1) inside tests
+
+This lets async events process before making assertions.
+✅ Fix for PytestDeprecationWarning (Fixture Scope)
+You're getting this warning:
+
+vbnet
+Copy
+Edit
+PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+🔥 Fix: Explicitly Set the Fixture Scope
+In your pytest.ini, add:
+
+ini
+Copy
+Edit
+[pytest]
+asyncio_mode = strict
+asyncio_default_fixture_loop_scope = function
+asyncio_mode = strict → Forces explicit async handling (best for async-heavy projects).
+asyncio_default_fixture_loop_scope = function → Ensures each test gets a fresh event loop.
+🚀 Summary of Fixes
+✅ Use @pytest_asyncio.fixture instead of @pytest.fixture
+✅ Ensure all async tests are marked with @pytest.mark.asyncio
+✅ Use await asyncio.sleep(0.1) to allow async processing
+✅ Set fixture loop scope in pytest.ini

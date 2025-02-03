@@ -1,0 +1,58 @@
+======================== FAILURES =========================
+___________ TestShip.test_engine_power_scaling ____________
+
+self = <tests.test_ship.TestShip testMethod=test_engine_power_scaling>
+
+    def test_engine_power_scaling(self):
+        """Test engine power scaling at different speeds"""
+        self.ship.ndb.speed_mode = "WARP"
+    
+        # Test warp power curve
+        speeds = [1.0, 2.0, 3.0]
+        for speed in speeds:
+            self.ship.ndb.velocity = speed
+            power = self.ship.calculate_engine_power()
+            expected = speed ** 3.0 * 100.0  # Using power_curve = 3.0
+            self.assertEqual(power, expected)
+    
+        # Test impulse power (linear scaling)
+        self.ship.ndb.speed_mode = "IMPULSE"
+        speeds = [0.25, 0.5, 0.75]
+        for speed in speeds:
+            self.ship.ndb.velocity = speed
+            power = self.ship.calculate_engine_power()
+            expected = speed * 50.0  # Using impulse_power_factor = 50.0
+>           self.assertEqual(power, expected)
+E           AssertionError: 13.4906607 != 12.5
+
+tests/test_ship.py:120: AssertionError
+_________________ TestShip.test_max_speed _________________
+
+self = <tests.test_ship.TestShip testMethod=test_max_speed>
+
+    def test_max_speed(self):
+        """Test maximum speed calculations"""
+>       max_speed = self.ship.get_max_speed("WARP")
+
+tests/test_ship.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <typeclass.ship.Ship object at 0x7f38a09a3590>
+speed_mode = 'WARP'
+
+    def get_max_speed(self, speed_mode: str) -> float:
+        """Get maximum speed based on current mode and damage."""
+        if speed_mode == "WARP":
+            if not self.db.engine.get("warp_exist", False):
+                return 0.0
+            damage_factor = 1.0 - self.db.engine.get("warp_damage", 0.25)  # Default 25% damage
+    
+            # Get max warp based on ship class, fallback to default
+>           ship_class = self.db.get("class", "constitution")  # Default to Constitution class
+E           TypeError: 'NoneType' object is not callable
+
+typeclass/ship.py:78: TypeError
+================= short test summary info =================
+FAILED tests/test_ship.py::TestShip::test_engine_power_scaling - AssertionError: 13.4906607 != 12.5
+FAILED tests/test_ship.py::TestShip::test_max_speed - TypeError: 'NoneType' object is not callable
+======== 2 failed, 40 passed, 1 skipped in 20.24s =========

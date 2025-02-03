@@ -1,0 +1,46 @@
+INTERNALERROR> Traceback (most recent call last):
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/_pytest/main.py", line 279, in wrap_session
+INTERNALERROR>     config._do_configure()
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/_pytest/config/__init__.py", line 1118, in _do_configure
+INTERNALERROR>     self.hook.pytest_configure.call_historic(kwargs=dict(config=self))
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pluggy/_hooks.py", line 535, in call_historic
+INTERNALERROR>     res = self._hookexec(self.name, self._hookimpls.copy(), kwargs, False)
+INTERNALERROR>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+INTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+INTERNALERROR>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+INTERNALERROR>     raise exception.with_traceback(exception.__traceback__)
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pluggy/_callers.py", line 103, in _multicall
+INTERNALERROR>     res = hook_impl.function(*args)
+INTERNALERROR>           ^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/runner/workspace/tests/conftest.py", line 41, in pytest_configure
+INTERNALERROR>     django.setup()
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/__init__.py", line 24, in setup
+INTERNALERROR>     apps.populate(settings.INSTALLED_APPS)
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/registry.py", line 91, in populate
+INTERNALERROR>     app_config = AppConfig.create(entry)
+INTERNALERROR>                  ^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/config.py", line 193, in create
+INTERNALERROR>     import_module(entry)
+INTERNALERROR>   File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/importlib/__init__.py", line 126, in import_module
+INTERNALERROR>     return _bootstrap._gcd_import(name[level:], package, level)
+INTERNALERROR>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+INTERNALERROR>   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+INTERNALERROR>   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+INTERNALERROR>   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+INTERNALERROR>   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+INTERNALERROR>   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/utils/__init__.py", line 14, in <module>
+INTERNALERROR>     from .utils import *
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/utils/utils.py", line 47, in <module>
+INTERNALERROR>     _EVENNIA_DIR = settings.EVENNIA_DIR
+INTERNALERROR>                    ^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/conf/__init__.py", line 104, in __getattr__
+INTERNALERROR>     val = getattr(_wrapped, name)
+INTERNALERROR>           ^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/conf/__init__.py", line 331, in __getattr__
+INTERNALERROR>     return getattr(self.default_settings, name)
+INTERNALERROR>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR> AttributeError: module 'django.conf.global_settings' has no attribute 'EVENNIA_DIR'

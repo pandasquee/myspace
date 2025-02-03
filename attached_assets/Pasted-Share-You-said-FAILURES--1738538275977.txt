@@ -1,0 +1,166 @@
+Share
+
+
+You said:
+==================================================================== FAILURES =====================================================================
+_______________________________________________________ TestSpatialQueries.test_hit_chance ________________________________________________________
+
+self = <tests.test_spatial_queries.TestSpatialQueries testMethod=test_hit_chance>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+    
+        # Create test objects in space
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Clear previous test data and ensure PostGIS is enabled
+                cur.execute("DELETE FROM space_objects WHERE key LIKE 'Test%'")
+    
+                # Enable PostGIS extension
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                conn.commit()
+    
+                # Create a test ship
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, orientation, status, power_systems
+                    ) VALUES (
+                        'Test Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(0, 0, 0), 3857),
+                        ST_SetSRID(ST_MakePoint(10, 0, 0), 3857),
+                        %s,
+                        %s
+                    ) RETURNING id;
+                """, (
+                    json.dumps({"active": True}),
+                    json.dumps({"main": {"exist": True}})
+                ))
+E               psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+
+tests/test_spatial_queries.py:27: InvalidParameterValue
+____________________________________________________ TestSpatialQueries.test_object_detection _____________________________________________________
+
+self = <tests.test_spatial_queries.TestSpatialQueries testMethod=test_object_detection>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+    
+        # Create test objects in space
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Clear previous test data and ensure PostGIS is enabled
+                cur.execute("DELETE FROM space_objects WHERE key LIKE 'Test%'")
+    
+                # Enable PostGIS extension
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                conn.commit()
+    
+                # Create a test ship
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, orientation, status, power_systems
+                    ) VALUES (
+                        'Test Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(0, 0, 0), 3857),
+                        ST_SetSRID(ST_MakePoint(10, 0, 0), 3857),
+                        %s,
+                        %s
+                    ) RETURNING id;
+                """, (
+                    json.dumps({"active": True}),
+                    json.dumps({"main": {"exist": True}})
+                ))
+E               psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+
+tests/test_spatial_queries.py:27: InvalidParameterValue
+_______________________________________________________ TestSpatialQueries.test_pathfinding _______________________________________________________
+
+self = <tests.test_spatial_queries.TestSpatialQueries testMethod=test_pathfinding>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+    
+        # Create test objects in space
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Clear previous test data and ensure PostGIS is enabled
+                cur.execute("DELETE FROM space_objects WHERE key LIKE 'Test%'")
+    
+                # Enable PostGIS extension
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                conn.commit()
+    
+                # Create a test ship
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, orientation, status, power_systems
+                    ) VALUES (
+                        'Test Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(0, 0, 0), 3857),
+                        ST_SetSRID(ST_MakePoint(10, 0, 0), 3857),
+                        %s,
+                        %s
+                    ) RETURNING id;
+                """, (
+                    json.dumps({"active": True}),
+                    json.dumps({"main": {"exist": True}})
+                ))
+E               psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+
+tests/test_spatial_queries.py:27: InvalidParameterValue
+============================================================= short test summary info =============================================================
+FAILED tests/test_spatial_queries.py::TestSpatialQueries::test_hit_chance - psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+FAILED tests/test_spatial_queries.py::TestSpatialQueries::test_object_detection - psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+FAILED tests/test_spatial_queries.py::TestSpatialQueries::test_pathfinding - psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+================================================================ 3 failed in 1.53s ================================================================
+
+ChatGPT said:
+ChatGPT
+The error message indicates that the position and orientation columns in the space_objects table are defined as LineString, but you're trying to insert Point geometries instead.
+
+Steps to Fix the Issue
+You need to decide whether:
+
+The columns should store Point instead of LineString
+If each space object has a single coordinate, change the database schema to store Point instead of LineString.
+You're supposed to store a LineString
+If position represents a trajectory or movement vector, you'll need to use ST_MakeLine instead of ST_MakePoint.
+Solution 1: Change the Column Type to Point
+If position and orientation should be a single point, update your database schema:
+
+sql
+Copy
+Edit
+ALTER TABLE space_objects
+ALTER COLUMN position TYPE geometry(Point, 3857),
+ALTER COLUMN orientation TYPE geometry(Point, 3857);
+Solution 2: Use ST_MakeLine for a LineString
+If position and orientation are supposed to be LineString (e.g., a trajectory), change your SQL insert statement:
+
+sql
+Copy
+Edit
+cur.execute("""
+    INSERT INTO space_objects (
+        key, object_type, position, orientation, status, power_systems
+    ) VALUES (
+        'Test Ship',
+        'ship',
+        ST_SetSRID(ST_MakeLine(ST_MakePoint(0, 0, 0), ST_MakePoint(10, 0, 0)), 3857),
+        ST_SetSRID(ST_MakeLine(ST_MakePoint(0, 0, 0), ST_MakePoint(10, 0, 0)), 3857),
+        %s,
+        %s
+    ) RETURNING id;
+""", (
+    json.dumps({"active": True}),
+    json.dumps({"main": {"exist": True}})
+))
+Which Fix to Choose?
+If position and orientation store only one point per object, use Solution 1 (convert them to Point).
+If position represents a path or movement trajectory, use Solution 2 (use ST_MakeLine).

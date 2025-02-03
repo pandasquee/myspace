@@ -1,0 +1,176 @@
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 7 items                                                              
+
+tests/test_weapon_manager.py::TestWeaponSystem::test_capacFAILED [ 14%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_capacitor_charging ERROR [ 14%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_compatibility FAILED [ 28%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_compatibility ERROR [ 28%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions FAILED [ 42%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence FAILED [ 57%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence ERROR [ 57%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_initialization FAILED [ 71%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_manager_integration FAILED [ 85%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_power_requirements FAILED [100%]
+
+========================= ERRORS ==========================
+_ ERROR at teardown of TestWeaponSystem.test_capacitor_charging _
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_capacitor_charging>
+
+    def tearDown(self):
+        """Clean up the test environment"""
+>       self.ship.delete()
+E       AttributeError: 'Ship' object has no attribute 'delete'
+
+tests/test_weapon_manager.py:139: AttributeError
+_ ERROR at teardown of TestWeaponSystem.test_weapon_compatibility _
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_compatibility>
+
+    def tearDown(self):
+        """Clean up the test environment"""
+>       self.ship.delete()
+E       AttributeError: 'Ship' object has no attribute 'delete'
+
+tests/test_weapon_manager.py:139: AttributeError
+_ ERROR at teardown of TestWeaponSystem.test_weapon_firing_sequence _
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_sequence>
+
+    def tearDown(self):
+        """Clean up the test environment"""
+>       self.ship.delete()
+E       AttributeError: 'Ship' object has no attribute 'delete'
+
+tests/test_weapon_manager.py:139: AttributeError
+======================== FAILURES =========================
+________ TestWeaponSystem.test_capacitor_charging _________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_capacitor_charging>
+
+    def test_capacitor_charging(self):
+        """Test weapon capacitor charging system"""
+        # Initialize capacitors
+        self.ship.ndb.beam_capacitor = 0.0
+        self.ship.ndb.beam_cap_max = 100.0
+    
+        # Verify initial state
+        self.assertEqual(self.ship.ndb.beam_capacitor, 0.0)
+    
+        # Test charging
+>       self.ship.db.power_manager.request_power("beam", 50.0)
+E       AttributeError: 'NoneType' object has no attribute 'request_power'
+
+tests/test_weapon_manager.py:55: AttributeError
+_______ TestWeaponSystem.test_weapon_compatibility ________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_compatibility>
+
+    def test_weapon_compatibility(self):
+        """Test weapon system compatibility with ship configurations"""
+        # Test beam weapon compatibility
+        self.ship.db.beam["exist"] = True
+>       self.assertTrue(self.test_beam.can_fire(self.ship.ndb.beam_capacitor))
+E       AssertionError: False is not true
+
+tests/test_weapon_manager.py:126: AssertionError
+_____ TestWeaponSystem.test_weapon_firing_conditions ______
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_conditions>
+
+    def tearDown(self):
+        """Clean up the test environment"""
+>       self.ship.delete()
+E       AttributeError: 'Ship' object has no attribute 'delete'
+
+tests/test_weapon_manager.py:139: AttributeError
+______ TestWeaponSystem.test_weapon_firing_sequence _______
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_sequence>
+
+    def test_weapon_firing_sequence(self):
+        """Test complete weapon firing sequence"""
+        # Set up capacitor
+        self.ship.ndb.beam_capacitor = 50.0
+        initial_charge = self.ship.ndb.beam_capacitor
+    
+        # Fire weapon
+>       success = self.test_beam.fire(self.ship)
+
+tests/test_weapon_manager.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <managers.weapon_manager.Weapon object at 0x7f243da7edd0>
+ship = <typeclass.ship.Ship object at 0x7f243da7f190>
+
+    def fire(self, ship) -> bool:
+        """Attempt to fire weapon."""
+        if not self.ready:
+            ship.msg(f"{self.name} is still recharging!")
+            return False
+    
+        capacitor = (ship.ndb.beam_capacitor if "beam" in self.name.lower()
+                    else ship.ndb.missile_capacitor)
+    
+        if capacitor < self.cost:
+            ship.msg(f"Insufficient power to fire {self.name}!")
+            return False
+    
+        # Update capacitor
+        if "beam" in self.name.lower():
+            ship.ndb.beam_capacitor -= self.cost
+        else:
+            ship.ndb.missile_capacitor -= self.cost
+    
+        # Start cooldown
+        self.ready = False
+>       self._last_fired = utils.time()
+E       AttributeError: module 'evennia.utils' has no attribute 'time'
+
+managers/weapon_manager.py:46: AttributeError
+_______ TestWeaponSystem.test_weapon_initialization _______
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_initialization>
+
+    def tearDown(self):
+        """Clean up the test environment"""
+>       self.ship.delete()
+E       AttributeError: 'Ship' object has no attribute 'delete'
+
+tests/test_weapon_manager.py:139: AttributeError
+____ TestWeaponSystem.test_weapon_manager_integration _____
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_manager_integration>
+
+    def tearDown(self):
+        """Clean up the test environment"""
+>       self.ship.delete()
+E       AttributeError: 'Ship' object has no attribute 'delete'
+
+tests/test_weapon_manager.py:139: AttributeError
+_____ TestWeaponSystem.test_weapon_power_requirements _____
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_power_requirements>
+
+    def tearDown(self):
+        """Clean up the test environment"""
+>       self.ship.delete()
+E       AttributeError: 'Ship' object has no attribute 'delete'
+
+tests/test_weapon_manager.py:139: AttributeError
+================= short test summary info =================
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_capacitor_charging - AttributeError: 'NoneType' object has no attribute 're...
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_compatibility - AssertionError: False is not true
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions - AttributeError: 'Ship' object has no attribute 'delete'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence - AttributeError: module 'evennia.utils' has no attribut...
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_initialization - AttributeError: 'Ship' object has no attribute 'delete'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_manager_integration - AttributeError: 'Ship' object has no attribute 'delete'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_power_requirements - AttributeError: 'Ship' object has no attribute 'delete'
+ERROR tests/test_weapon_manager.py::TestWeaponSystem::test_capacitor_charging - AttributeError: 'Ship' object has no attribute 'delete'
+ERROR tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_compatibility - AttributeError: 'Ship' object has no attribute 'delete'
+ERROR tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence - AttributeError: 'Ship' object has no attribute 'delete'
+=============== 7 failed, 3 errors in 1.53s ===============

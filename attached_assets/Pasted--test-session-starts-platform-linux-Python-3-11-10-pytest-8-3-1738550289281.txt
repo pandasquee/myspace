@@ -1,0 +1,104 @@
+================= test session starts =================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 3 items                                     
+
+tests/test_sensor_manager.py::TestSensorManager::test_basic_scanning FAILED [ 33%]
+tests/test_sensor_manager.py::TestSensorManager::test_sensor_activation PASSED [ 66%]
+tests/test_alpha_deployment.py::test_alpha_deployment FAILED [100%]
+
+====================== FAILURES =======================
+________ TestSensorManager.test_basic_scanning ________
+
+self = <tests.test_sensor_manager.TestSensorManager testMethod=test_basic_scanning>
+
+    def test_basic_scanning(self):
+        """Test basic sensor scanning."""
+        # Activate sensors
+        self.obj.db.sensor["srs_active"] = True
+    
+        # Perform scan (100 parsecs should detect target)
+        max_range_su = 200.0 * PARSEC_TO_SU  # Convert PC to SU for range
+        contacts = self.sensor_mgr.scan_range(200.0)  # Using PC for scan range
+        self.assertGreater(len(contacts), 0)
+    
+        # Verify contact details
+        contact = next((c for c in contacts if c.object_id == self.target.id), None)
+        self.assertIsNotNone(contact)
+>       self.assertEqual(contact.position[0] / PARSEC_TO_SU, 100.0)  # Convert SU to PC for comparison
+E       AssertionError: 100.00000000000001 != 100.0
+
+tests/test_sensor_manager.py:149: AssertionError
+---------------- Captured stdout call -----------------
+Scanning from Test-Ship at coordinates (SU): {'x': 0.0, 'y': 0.0, 'z': 0.0}
+Max range: 617131924402.85 SU
+Active mode: False
+Found Test-Target (ID: 2) at distance 308565962201.4 SU with power 50.0GW
+Scan complete. Found 1 contacts
+________________ test_alpha_deployment ________________
+
+    def test_alpha_deployment():
+        """Test basic deployment of ships and planets."""
+        # Set up database
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Clean up any existing test data
+                cur.execute("DELETE FROM space_objects WHERE key LIKE %s", ('Test-%',))
+    
+                # Ensure PostGIS extension and recreate table
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis")
+                cur.execute("""
+                    DROP TABLE IF EXISTS space_objects;
+                    CREATE TABLE space_objects (
+                        id SERIAL PRIMARY KEY,
+                        key TEXT NOT NULL,
+                        object_type TEXT,
+                        position GEOMETRY(POINTZ, 3857),  -- Using POINTZ for 3D coordinates
+                        status JSONB,
+                        power_systems JSONB
+                    );
+                """)
+    
+        print("\nCreating Earth...")
+        # Create Earth in Alpha Quadrant
+        earth = Planet()
+        earth.key = "Test-Earth"
+        earth_x_su = -9174.0 * SECTOR_SIZE_SU  # Convert to SU directly
+        earth_y_su = 61.8 * SECTOR_SIZE_SU
+        earth_z_su = 0.0
+        earth.set_position(earth_x_su, earth_y_su, earth_z_su)
+        earth.set_class("M")
+        earth.set_civilization(7)  # Federation homeworld
+    
+        # Verify Earth's sector
+        earth_sector = earth.db.coords.get_sector_coords()
+        earth_sector_name = earth.db.coords.get_sector_name()
+        print(f"Earth sector coordinates: {earth_sector}")
+        print(f"Earth sector name: {earth_sector_name}")
+        # Updated assertion to match new sector size (100 parsecs)
+>       assert earth_sector[:2] == (-918, 6), "Earth not in correct sector X,Y position"
+E       AssertionError: Earth not in correct sector X,Y position
+E       assert (-9174, 61) == (-918, 6)
+E         
+E         At index 0 diff: -9174 != -918
+E         
+E         Full diff:
+E           (
+E         -     -918,
+E         ?        ^...
+E         
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
+
+tests/test_alpha_deployment.py:50: AssertionError
+---------------- Captured stdout call -----------------
+
+Creating Earth...
+Earth sector coordinates: (-9174, 61, 0)
+Earth sector name: A-9174.61.0
+=============== short test summary info ===============
+FAILED tests/test_sensor_manager.py::TestSensorManager::test_basic_scanning - AssertionError: 100.00000000000001 != 100.0
+FAILED tests/test_alpha_deployment.py::test_alpha_deployment - AssertionError: Earth not in correct sector X,Y po...
+============= 2 failed, 1 passed in 2.70s =============

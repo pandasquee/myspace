@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 7 items                                                              
+
+tests/test_weapon_manager.py::TestWeaponSystem::test_capacitor_charging PASSED [ 14%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_compatibility PASSED [ 28%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions FAILED [ 42%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence PASSED [ 57%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_initialization PASSED [ 71%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_manager_integration PASSED [ 85%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_power_requirements PASSED [100%]
+
+=================================== FAILURES ===================================
+________________ TestWeaponSystem.test_weapon_firing_conditions ________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_conditions>
+
+    def test_weapon_firing_conditions(self):
+        """Test various weapon firing conditions"""
+        # Test firing with insufficient charge
+        self.ship.ndb.beam_capacitor = 0.0
+        self.test_beam._last_fired = time.time() - 10
+        success = self.test_beam.fire(self.ship)
+        self.assertFalse(success)
+    
+        # Test firing during cooldown
+        self.ship.ndb.beam_capacitor = 100.0
+        self.test_beam._last_fired = time.time()  # Just fired
+        success = self.test_beam.fire(self.ship)
+>       self.assertFalse(success)
+E       AssertionError: True is not false
+
+tests/test_weapon_manager.py:129: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions - AssertionError: True is not false
+========================= 1 failed, 6 passed in 0.07s ==========================

@@ -1,0 +1,37 @@
+Core Power System Design
+Energy Pools
+
+Main Power (main) – Primary energy source for core systems.
+Auxiliary Power (aux) – Secondary power, used for backup and less critical systems.
+Battery Power (batt) – Stored energy, used when main/aux power is insufficient.
+Power Generation & Allocation
+
+Each ship generates 10% of its total energy pool as available power per cycle.
+Example: A ship with 3000GW main power and 300GW aux/batt generates:
+300GW of main power
+30GW of auxiliary power
+30GW of battery power
+The Power Manager dynamically distributes power to subsystems:
+Helm (Propulsion)
+Shields
+Weapons
+Sensors
+Operations (Life Support, Comms, Transporters, etc.)
+Unallocated power is automatically distributed based on priority.
+Power Usage & Balancing
+Dynamic Allocation: The system ensures that when power is available, it is assigned to active subsystems based on predefined priorities.
+Subsystem Cutoff: If a system has no allocated power, it stops functioning or operates at reduced efficiency.
+Power Scaling: Subsystems can operate at partial efficiency if power is limited.
+Fuel Efficiency & Reactor Output
+Reactors operate at a percentage of maximum output:
+Example: A ship’s reactor can be set to 23%, 4%, etc.
+Lower reactor output = Lower power generation, reducing energy for ship systems.
+Lower reactor output = Lower sensor visibility, creating a stealth mechanic.
+Lower reactor output = Higher fuel efficiency, allowing for longer voyages.
+Additional Features
+No Passive Power Regeneration: Power is continuously generated as long as fuel is available.
+Tactical Adjustments: Players can dial back main power to conserve fuel while affecting sensor resolution and system performance.
+Comparison to Traditional Systems
+Similar to C-based space_balance.c, where power distribution is dynamic and proportional.
+Inspired by Star Trek's power balancing, allowing players to reroute power in emergencies.
+Unlike many games, there is no “energy cap” that must recharge over time—power is always dynamically managed.

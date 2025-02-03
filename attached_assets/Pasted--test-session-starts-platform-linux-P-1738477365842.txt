@@ -1,0 +1,100 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 0 items / 3 errors                                       
+
+============================== ERRORS ==============================
+___________ ERROR collecting tests/test_power_manager.py ___________
+/home/runner/workspace/tests/test_power_manager.py:2: in <module>
+    from evennia.utils.test_resources import EvenniaTest
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:184: in exec_module
+    exec(co, module.__dict__)
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/utils/test_resources.py:37: in <module>
+    from evennia.accounts.accounts import DefaultAccount
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/accounts/accounts.py:27: in <module>
+    from evennia.accounts.manager import AccountManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/accounts/manager.py:8: in <module>
+    from django.contrib.auth.models import UserManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/contrib/auth/models.py:3: in <module>
+    from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/contrib/auth/base_user.py:57: in <module>
+    class AbstractBaseUser(models.Model):
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/db/models/base.py:129: in __new__
+    app_config = apps.get_containing_app_config(module)
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/registry.py:260: in get_containing_app_config
+    self.check_apps_ready()
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/registry.py:138: in check_apps_ready
+    raise AppRegistryNotReady("Apps aren't loaded yet.")
+E   django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
+------------------------- Captured stdout --------------------------
+secret_settings.py file not found or failed to import.
+_______________ ERROR collecting tests/test_ship.py ________________
+/home/runner/workspace/tests/test_ship.py:2: in <module>
+    from evennia.utils.test_resources import EvenniaTest
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:184: in exec_module
+    exec(co, module.__dict__)
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/utils/test_resources.py:37: in <module>
+    from evennia.accounts.accounts import DefaultAccount
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/accounts/accounts.py:27: in <module>
+    from evennia.accounts.manager import AccountManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/accounts/manager.py:8: in <module>
+    from django.contrib.auth.models import UserManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/contrib/auth/models.py:3: in <module>
+    from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/contrib/auth/base_user.py:57: in <module>
+    class AbstractBaseUser(models.Model):
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/db/models/base.py:129: in __new__
+    app_config = apps.get_containing_app_config(module)
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/registry.py:260: in get_containing_app_config
+    self.check_apps_ready()
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/registry.py:138: in check_apps_ready
+    raise AppRegistryNotReady("Apps aren't loaded yet.")
+E   django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
+____________ ERROR collecting tests/test_spaceobject.py ____________
+/home/runner/workspace/tests/test_spaceobject.py:2: in <module>
+    from evennia.utils.test_resources import EvenniaTest
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:690: in _load_unlocked
+    ???
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:184: in exec_module
+    exec(co, module.__dict__)
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/utils/test_resources.py:37: in <module>
+    from evennia.accounts.accounts import DefaultAccount
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/accounts/accounts.py:27: in <module>
+    from evennia.accounts.manager import AccountManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/evennia/accounts/manager.py:8: in <module>
+    from django.contrib.auth.models import UserManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/contrib/auth/models.py:3: in <module>
+    from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/contrib/auth/base_user.py:57: in <module>
+    class AbstractBaseUser(models.Model):
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/db/models/base.py:129: in __new__
+    app_config = apps.get_containing_app_config(module)
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/registry.py:260: in get_containing_app_config
+    self.check_apps_ready()
+/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/apps/registry.py:138: in check_apps_ready
+    raise AppRegistryNotReady("Apps aren't loaded yet.")
+E   django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
+===================== short test summary info ======================
+ERROR tests/test_power_manager.py - django.core.exceptions.AppRegistryNotReady: Apps aren't loaded ...
+ERROR tests/test_ship.py - django.core.exceptions.AppRegistryNotReady: Apps aren't loaded ...
+ERROR tests/test_spaceobject.py - django.core.exceptions.AppRegistryNotReady: Apps aren't loaded ...
+!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!
+======================== 3 errors in 0.70s =========================

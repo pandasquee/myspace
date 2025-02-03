@@ -1,0 +1,108 @@
+"""
+Base test configuration for space engine tests.
+"""
+import os
+import sys
+from unittest.mock import patch
+import django
+from django.conf import settings
+from django.test import override_settings
+
+# Add the game directory to the Python path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.environ['DJANGO_SETTINGS_MODULE'] = 'myspace.server.conf.settings'
+
+# Configure minimal Django settings for testing
+test_settings = {
+    'INSTALLED_APPS': [
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'evennia',
+        'myspace',
+    ],
+    'CHANNEL_LOG_NUM_TAIL_LINES': 20,
+    'DEFAULT_HOME': '#4',
+    'PROTOTYPE_MODULES': [],
+    'DATABASES': {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    },
+    'EVENNIA_TEST_MODE': True,
+    # Evennia-specific settings
+    'SEARCH_MULTIMATCH_TEMPLATE': "Multiple matches were found:",
+    'SEARCH_MULTIMATCH_REGEX': r"(?P<number>[0-9]+)\-(?P<name>.*)",
+    'TYPECLASS_PATHS': ["typeclasses"],
+    'BASE_TYPECLASS_PATH': "typeclasses",
+    'DEFAULT_HOME': "#2",
+    'MUDINFO_CHANNEL_NAME': "MUDinfo",
+    'CHANNEL_COMMAND_CLASS': "evennia.commands.default.comms.ChannelCommand",
+    'COMMAND_DEFAULT_CLASS': "evennia.commands.default.muxcommand.MuxCommand",
+    'OBJECT_TYPECLASS': "typeclasses.objects.Object",
+    'CHARACTER_TYPECLASS': "typeclasses.characters.Character",
+    'ACCOUNT_TYPECLASS': "typeclasses.accounts.Account",
+    'GUEST_TYPECLASS': "typeclasses.accounts.Guest",
+    'SESSION_TYPECLASS': "evennia.server.serversession.ServerSession",
+    # Additional required Evennia settings
+    'EVENNIA_DIR': os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    'GAME_DIR': os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'myspace'),
+    'LOG_DIR': os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'myspace/server/logs'),
+    'SCRIPT_TYPECLASSES': ["typeclasses.scripts.Script"],
+    'SERVERNAME': 'Test Game',
+    'WEBSOCKET_CLIENT_URL': None,
+    'DEBUG': True,
+}
+
+settings.configure(**test_settings)
+django.setup()
+
+# Now we can safely import Evennia components
+import evennia
+from evennia.utils.test_resources import EvenniaTest
+
+# Mock session handler
+class MockSessionHandler:
+    def __init__(self):
+        self.data_out = []
+        self.sessions = {}
+
+    def disconnect(self, *args, **kwargs):
+        pass
+
+    def all_sessions(self):
+        return []
+
+    def get_all_sync(self):
+        return []
+
+# Initialize mock session handler
+evennia.SESSION_HANDLER = MockSessionHandler()
+
+# Mock _mock_deferlater for async operations
+def _mock_deferlater(*args, **kwargs):
+    return None
+
+class BaseTest(EvenniaTest):
+    """Base test class with Evennia test setup."""
+
+    account_typeclass = "typeclasses.accounts.Account"
+    object_typeclass = "typeclasses.objects.Object"
+    character_typeclass = "typeclasses.characters.Character"
+    exit_typeclass = "typeclasses.exits.Exit"
+    room_typeclass = "typeclasses.rooms.Room"
+    script_typeclass = "typeclasses.scripts.Script"
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+        self._old_handlers = (
+            evennia.SESSION_HANDLER,
+            settings.DEFAULT_HOME,
+            settings.PROTOTYPE_MODULES
+        )
+        # Ensure session handler is mocked
+        evennia.SESSION_HANDLER = MockSessionHandler()

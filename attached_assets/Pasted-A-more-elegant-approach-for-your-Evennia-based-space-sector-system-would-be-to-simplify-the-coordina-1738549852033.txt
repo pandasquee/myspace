@@ -1,0 +1,177 @@
+A more elegant approach for your Evennia-based space sector system would be to simplify the coordinate conversion process while preserving the scalability and efficiency of sector-based partitioning. Here’s an alternative approach:
+
+Alternative Sector System (Direct SU-Based Partitioning)
+Key Changes:
+Store all coordinates in SU (no need to work in parsecs for sector calculations).
+Define sector sizes directly in SU instead of converting from parsecs.
+Use a simple mathematical formula to calculate a sector from SU coordinates.
+How It Works
+Instead of defining sectors as 10x10 parsecs, we define them as fixed-size cubes in SU:
+
+Each sector is X SU wide, Y SU tall, and Z SU deep.
+Example: If a sector is 3 billion SU per side (≈10 parsecs), the math simplifies.
+Formula to Find a Sector
+We use integer division (//) to determine a sector:
+
+Sector X
+=
+X Coordinate (SU)
+Sector Size (SU)
+Sector X= 
+Sector Size (SU)
+X Coordinate (SU)
+​
+ 
+Sector Y
+=
+Y Coordinate (SU)
+Sector Size (SU)
+Sector Y= 
+Sector Size (SU)
+Y Coordinate (SU)
+​
+ 
+Sector Z
+=
+Z Coordinate (SU)
+Sector Size (SU)
+Sector Z= 
+Sector Size (SU)
+Z Coordinate (SU)
+​
+ 
+Since SU coordinates are stored as floats, rounding or flooring can ensure consistent sector boundaries.
+
+Example Calculation
+Let’s say we use sector size = 3,085,659,622 SU (≈10 parsecs).
+
+Ship A is at (6,200,000,000 SU, -1,500,000,000 SU, 45,000,000 SU).
+Ship B is at (-3,000,000,000 SU, 1,000,000,000 SU, 50,000,000 SU).
+Using integer division (//):
+
+Ship A's Sector:
+
+Sector X = 
+6
+,
+200
+,
+000
+,
+000
+/
+/
+3
+,
+085
+,
+659
+,
+622
+=
+2
+6,200,000,000//3,085,659,622=2
+Sector Y = 
+−
+1
+,
+500
+,
+000
+,
+000
+/
+/
+3
+,
+085
+,
+659
+,
+622
+=
+−
+1
+−1,500,000,000//3,085,659,622=−1
+Sector Z = 
+45
+,
+000
+,
+000
+/
+/
+3
+,
+085
+,
+659
+,
+622
+=
+0
+45,000,000//3,085,659,622=0
+→ Sector (2, -1, 0)
+Ship B's Sector:
+
+Sector X = 
+−
+3
+,
+000
+,
+000
+,
+000
+/
+/
+3
+,
+085
+,
+659
+,
+622
+=
+−
+1
+−3,000,000,000//3,085,659,622=−1
+Sector Y = 
+1
+,
+000
+,
+000
+,
+000
+/
+/
+3
+,
+085
+,
+659
+,
+622
+=
+0
+1,000,000,000//3,085,659,622=0
+Sector Z = 
+50
+,
+000
+,
+000
+/
+/
+3
+,
+085
+,
+659
+,
+622
+=
+0
+50,000,000//3,085,659,622=0
+→ Sector (-1, 0, 0)

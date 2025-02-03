@@ -1,0 +1,151 @@
+==================================================================== FAILURES =====================================================================
+_________________________________________________ TestWeaponSystem.test_weapon_firing_conditions __________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_conditions>
+
+    def test_weapon_firing_conditions(self):
+        """Test various weapon firing conditions"""
+        # Test firing with insufficient charge
+        self.ship.ndb.beam_capacitor = 0.0
+        self.test_beam._last_fired = time.time() - 10
+>       success = self.test_beam.fire(self.ship)
+
+tests/test_weapon_manager.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <managers.weapon_manager.Weapon object at 0x7fb638e46d90>, ship = <typeclass.ship.Ship object at 0x7fb638e3a790>
+
+    def fire(self, ship) -> bool:
+        """Attempt to fire weapon."""
+        if not self.ready:
+            ship.msg(f"{self.name} is still recharging!")
+            return False
+    
+        capacitor = (ship.ndb.beam_capacitor if "beam" in self.name.lower()
+                    else ship.ndb.missile_capacitor)
+    
+        if capacitor < self.cost:
+>           ship.msg(f"Insufficient power to fire {self.name}!")
+E           AttributeError: 'Ship' object has no attribute 'msg'
+
+managers/weapon_manager.py:35: AttributeError
+__________________________________________________ TestWeaponSystem.test_weapon_firing_sequence ___________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_sequence>
+
+    def test_weapon_firing_sequence(self):
+        """Test complete weapon firing sequence"""
+        # Set up capacitor
+        self.ship.ndb.beam_capacitor = 50.0
+        initial_charge = self.ship.ndb.beam_capacitor
+    
+        # Fire weapon
+        self.test_beam._last_fired = time.time() - 10  # Ensure weapon is ready
+>       success = self.test_beam.fire(self.ship)
+
+tests/test_weapon_manager.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <managers.weapon_manager.Weapon object at 0x7fb638ca5c10>, ship = <typeclass.ship.Ship object at 0x7fb638ca4a90>
+
+    def fire(self, ship) -> bool:
+        """Attempt to fire weapon."""
+        if not self.ready:
+            ship.msg(f"{self.name} is still recharging!")
+            return False
+    
+        capacitor = (ship.ndb.beam_capacitor if "beam" in self.name.lower()
+                    else ship.ndb.missile_capacitor)
+    
+        if capacitor < self.cost:
+            ship.msg(f"Insufficient power to fire {self.name}!")
+            return False
+    
+        # Update capacitor
+        if "beam" in self.name.lower():
+            ship.ndb.beam_capacitor -= self.cost
+        else:
+            ship.ndb.missile_capacitor -= self.cost
+    
+        # Start cooldown
+        self.ready = False
+        self._last_fired = time.time()
+>       utils.delay(self.cooldown, self._recharge, ship)
+E       NameError: name 'utils' is not defined
+
+managers/weapon_manager.py:47: NameError
+___________________________________________________ TestWeaponSystem.test_weapon_initialization ___________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_initialization>
+
+    def test_weapon_initialization(self):
+        """Test weapon system initialization"""
+        self.assertTrue(self.ship.db.beam["exist"])
+        self.assertEqual(self.ship.db.beam["banks"], 1)
+>       self.assertEqual(self.ship.ndb.beam_cap_max, 100.0)
+E       AssertionError: 2500.0 != 100.0
+
+tests/test_weapon_manager.py:60: AssertionError
+________________________________________________ TestWeaponSystem.test_weapon_manager_integration _________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_manager_integration>
+
+    def test_weapon_manager_integration(self):
+        """Test weapon manager integration"""
+        manager = self.ship.ndb.weapon_manager
+        self.assertIsNotNone(manager)
+>       self.assertEqual(len(manager.weapons), 0)
+E       AttributeError: 'WeaponManager' object has no attribute 'weapons'
+
+tests/test_weapon_manager.py:111: AttributeError
+_________________________________________________ TestWeaponSystem.test_weapon_power_requirements _________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_power_requirements>
+
+    def test_weapon_power_requirements(self):
+        """Test weapon power consumption"""
+        initial_power = 100.0
+        self.ship.ndb.beam_capacitor = initial_power
+    
+        # Fire weapon
+        self.test_beam._last_fired = time.time() - 10
+>       success = self.test_beam.fire(self.ship)
+
+tests/test_weapon_manager.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <managers.weapon_manager.Weapon object at 0x7fb638e47e50>, ship = <typeclass.ship.Ship object at 0x7fb638e47190>
+
+    def fire(self, ship) -> bool:
+        """Attempt to fire weapon."""
+        if not self.ready:
+            ship.msg(f"{self.name} is still recharging!")
+            return False
+    
+        capacitor = (ship.ndb.beam_capacitor if "beam" in self.name.lower()
+                    else ship.ndb.missile_capacitor)
+    
+        if capacitor < self.cost:
+            ship.msg(f"Insufficient power to fire {self.name}!")
+            return False
+    
+        # Update capacitor
+        if "beam" in self.name.lower():
+            ship.ndb.beam_capacitor -= self.cost
+        else:
+            ship.ndb.missile_capacitor -= self.cost
+    
+        # Start cooldown
+        self.ready = False
+        self._last_fired = time.time()
+>       utils.delay(self.cooldown, self._recharge, ship)
+E       NameError: name 'utils' is not defined
+
+managers/weapon_manager.py:47: NameError
+============================================================= short test summary info =============================================================
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions - AttributeError: 'Ship' object has no attribute 'msg'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence - NameError: name 'utils' is not defined
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_initialization - AssertionError: 2500.0 != 100.0
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_manager_integration - AttributeError: 'WeaponManager' object has no attribute 'weapons'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_power_requirements - NameError: name 'utils' is not defined
+=========================================================== 5 failed, 2 passed in 0.10s ===========================================================

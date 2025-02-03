@@ -1,0 +1,85 @@
+=================================== FAILURES ===================================
+_________________ TestWeaponSystem.test_weapon_initialization __________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem object at 0x7f694c02f490>
+
+    def test_weapon_initialization(self):
+        """Test weapon system initialization"""
+>       self.assertTrue(self.ship.db.beam["exist"])
+E       AttributeError: 'TestWeaponSystem' object has no attribute 'assertTrue'
+
+tests/test_weapon_manager.py:45: AttributeError
+___________________ TestWeaponSystem.test_capacitor_charging ___________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem object at 0x7f694c02f110>
+
+    def test_capacitor_charging(self):
+        """Test weapon capacitor charging system"""
+        # Verify initial state
+>       self.assertEqual(self.ship.ndb.beam_capacitor, 0.0)
+E       AttributeError: 'TestWeaponSystem' object has no attribute 'assertEqual'
+
+tests/test_weapon_manager.py:52: AttributeError
+_________________ TestWeaponSystem.test_weapon_firing_sequence _________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem object at 0x7f694c02f590>
+
+    def test_weapon_firing_sequence(self):
+        """Test complete weapon firing sequence"""
+        # Set up capacitor
+>       self.ship.ndb.beam_capacitor = 50.0
+E       AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+
+tests/test_weapon_manager.py:62: AttributeError
+__________________ TestWeaponSystem.test_weapon_compatibility __________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem object at 0x7f694c02f950>
+
+    def test_weapon_compatibility(self):
+        """Test weapon system compatibility with ship configurations"""
+        # Test beam weapon compatibility
+>       self.ship.db.beam["exist"] = True
+E       AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+
+tests/test_weapon_manager.py:76: AttributeError
+_______________ TestWeaponSystem.test_weapon_power_requirements ________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem object at 0x7f694c02fdd0>
+
+    def test_weapon_power_requirements(self):
+        """Test weapon power consumption"""
+        initial_power = 100.0
+>       self.ship.ndb.beam_capacitor = initial_power
+E       AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+
+tests/test_weapon_manager.py:84: AttributeError
+_______________ TestWeaponSystem.test_weapon_manager_integration _______________
+
+self = <tests.test_weapon_manager.TestWeaponSystem object at 0x7f694c013350>
+
+    def test_weapon_manager_integration(self):
+        """Test weapon manager integration"""
+>       manager = self.ship.ndb.weapon_manager
+E       AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+
+tests/test_weapon_manager.py:96: AttributeError
+________________ TestWeaponSystem.test_weapon_firing_conditions ________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem object at 0x7f694c013890>
+
+    def test_weapon_firing_conditions(self):
+        """Test various weapon firing conditions"""
+        # Test firing with insufficient charge
+>       self.ship.ndb.beam_capacitor = 0.0
+E       AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+
+tests/test_weapon_manager.py:107: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_initialization - AttributeError: 'TestWeaponSystem' object has no attribute 'assertTrue'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_capacitor_charging - AttributeError: 'TestWeaponSystem' object has no attribute 'assertEqual'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence - AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_compatibility - AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_power_requirements - AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_manager_integration - AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions - AttributeError: 'TestWeaponSystem' object has no attribute 'ship'
+============================== 7 failed in 0.07s ===============================

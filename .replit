@@ -1,0 +1,276 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python managers/main.py"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Space Engine Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Simplified Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Complete Engine Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Priority Manager Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Space Engine Test"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Basic Tests"
+
+[[workflows.workflow]]
+name = "Space Engine Test"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd myspace && evennia -v migrate && evennia -v start"
+
+[[workflows.workflow]]
+name = "Run Evennia"
+author = 39266229
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd myspace && evennia migrate && evennia -l DEBUG start"
+
+[[workflows.workflow]]
+name = "Test"
+author = 39266229
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pytest tests/"
+
+[[workflows.workflow]]
+name = "Space Engine Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_power_manager.py -v"
+
+[[workflows.workflow]]
+name = "Priority Manager Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_priority_manager.py -v"
+
+[[workflows.workflow]]
+name = "Complete Engine Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_priority_manager.py tests/test_station.py tests/test_station_events.py tests/test_ship.py tests/test_power_manager.py -v"
+
+[[workflows.workflow]]
+name = "Power Manager Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_power_manager.py -v"
+
+[[workflows.workflow]]
+name = "Spatial Query Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_spatial_queries.py -v"
+
+[[workflows.workflow]]
+name = "All Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_sector_manager.py tests/test_spatial_queries.py -v"
+
+[[workflows.workflow]]
+name = "Simplified Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_station_events.py -v"
+
+[[workflows.workflow]]
+name = "Sector Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_sector_manager.py -v"
+
+[[workflows.workflow]]
+name = "Run Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_bridge_commands.py -v"
+
+[[workflows.workflow]]
+name = "Sensor Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_sensor_manager.py -v"
+
+[[workflows.workflow]]
+name = "Alpha Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_alpha_deployment.py -v"
+
+[[workflows.workflow]]
+name = "Sensor and Alpha Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_sensor_manager.py tests/test_alpha_deployment.py -v"
+
+[[workflows.workflow]]
+name = "Space Engine"
+author = 39266229
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd myspace && evennia -l DEBUG migrate && evennia -l DEBUG start"
+
+[[workflows.workflow]]
+name = "Basic Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_bridge_commands.py -v"
+
+[deployment]
+run = ["python", "managers/main.py"]
+build = ["sh", "-c", "evennia migrate && evennia start"]
+
+[[ports]]
+localPort = 4000
+externalPort = 80
+
+[[ports]]
+localPort = 4001
+externalPort = 3001
+
+[[ports]]
+localPort = 4002
+externalPort = 3000

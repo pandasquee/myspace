@@ -1,0 +1,51 @@
+Sector → SpaceObject → Neighborhood → Room Hierarchy
+Your game's spatial organization follows a hierarchical system that ensures both large-scale space navigation and local movement within space stations, starships, and planets.
+
+1. Master "Universe" Room
+All SpaceObjects (ships, stations, planets, anomalies) exist inside a single "Universe" room.
+SpaceObjects never leave the Universe room unless they dock or land.
+SpaceObjects are positioned using coordinate tracking rather than physical room movement.
+2. SpaceObjects
+SpaceObjects include ships, stations, planets, and any other large spatial entity.
+They move inside the "Universe" room, but their internal rooms are separate spaces.
+Each SpaceObject tracks its sector and coordinate position within the Universe.
+3. Neighborhoods
+Some SpaceObjects (like space stations or large ships) might have multiple internal neighborhoods.
+A neighborhood represents a section within a SpaceObject, such as:
+Decks on a starship.
+Districts on a space station.
+Sectors of a planetary city.
+Neighborhoods help organize larger SpaceObjects, reducing complexity in movement.
+4. Rooms
+Characters and interactive game elements exist inside Rooms.
+Rooms belong to a SpaceObject and define specific areas inside the ship/station/planet.
+Each room is linked by exits (doors, corridors, airlocks).
+Movement and Docking/Landing Mechanics
+SpaceObjects Move Within the Universe Room
+
+Ships travel at warp/impulse within the Universe room using coordinate-based movement.
+They do not physically "move" between different Evennia rooms.
+Docking & Landing Mechanics
+
+When a SpaceObject docks or lands at another:
+The entire SpaceObject is teleported inside the larger SpaceObject.
+An airlock exit is created connecting the docked ship to the landing/docking point.
+The docked ship's position is now inside the larger SpaceObject, instead of the Universe room.
+Undocking & Launching Mechanics
+
+When a SpaceObject undocks or takes off:
+It teleports back to the Universe room.
+The airlock exit is removed.
+The ship resumes normal space movement.
+Example: Ship Docking at a Station
+A player is aboard USS Endeavor (a SpaceObject inside the Universe room).
+The USS Endeavor docks at Deep Space 9 (another SpaceObject).
+USS Endeavor is teleported inside DS9.
+A new airlock exit connects the ship's entryway to DS9's docking bay.
+Players can walk freely between the ship and the station.
+If the ship undocks, it is teleported back to the Universe room, and the exit is removed.
+Why This Works Well
+✅ Preserves coordinate-based movement without physically moving ships between rooms.
+✅ Allows for docking mechanics that feel natural.
+✅ Keeps internal spaces independent from the larger space navigation system.
+✅ Scales efficiently—no need to create separate "space rooms" for every possible ship movement.

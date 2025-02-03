@@ -1,0 +1,33 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 0 items / 1 error                                                                                                              
+
+================================================================= ERRORS =================================================================
+_____________________________________________ ERROR collecting tests/test_bridge_commands.py _____________________________________________
+tests/test_bridge_commands.py:5: in <module>
+    from evennia.commands.default.tests import CommandTest
+.pythonlibs/lib/python3.11/site-packages/evennia/commands/default/tests.py:29: in <module>
+    from evennia.commands import cmdparser
+.pythonlibs/lib/python3.11/site-packages/evennia/commands/cmdparser.py:13: in <module>
+    from evennia.utils.logger import log_trace
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/__init__.py:14: in <module>
+    from .utils import *
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/utils.py:44: in <module>
+    from evennia.utils import logger
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/logger.py:370: in <module>
+    class EvenniaLogFile(logfile.LogFile):
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/logger.py:385: in EvenniaLogFile
+    _CHANNEL_LOG_NUM_TAIL_LINES = settings.CHANNEL_LOG_NUM_TAIL_LINES
+.pythonlibs/lib/python3.11/site-packages/django/conf/__init__.py:102: in __getattr__
+    self._setup(name)
+.pythonlibs/lib/python3.11/site-packages/django/conf/__init__.py:82: in _setup
+    raise ImproperlyConfigured(
+E   django.core.exceptions.ImproperlyConfigured: Requested setting CHANNEL_LOG_NUM_TAIL_LINES, but settings are not configured. You must either define the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.
+======================================================== short test summary info =========================================================
+ERROR tests/test_bridge_commands.py - django.core.exceptions.ImproperlyConfigured: Requested setting CHANNEL_LOG_NUM_TAIL_LINES, but settings are not configured. You must ...
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+============================================================ 1 error in 1.27s ============================================================

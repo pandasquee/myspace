@@ -1,0 +1,66 @@
+
+
+======================== FAILURES =========================
+________ TestSectorManager.test_sector_assignment _________
+
+self = <tests.test_sector_manager.TestSectorManager testMethod=test_sector_assignment>
+
+    def test_sector_assignment(self):
+        """Test assigning objects to sectors."""
+        # Create test positions
+        pos1 = (50.0, 50.0, 50.0)
+        pos2 = (150.0, 50.0, 50.0)
+    
+        # Create sectors
+        sector1_id = self.manager.get_sector_for_position(pos1)
+        sector2_id = self.manager.get_sector_for_position(pos2)
+        self.assertIsNotNone(sector1_id)
+        self.assertIsNotNone(sector2_id)
+    
+        # Create test object
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, status, power_systems
+                    ) VALUES (
+                        'TEST-Moving-Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(%s, %s, %s), 3857),
+                        '{"active": true}'::jsonb,
+                        '{"main": {"exist": true}}'::jsonb
+                    ) RETURNING id
+                """, pos1)
+                result = cur.fetchone()
+                self.assertIsNotNone(result, "Failed to create test object")
+                obj_id = result[0]
+    
+        # Move object to new sector
+        self.manager.update_object_sector(obj_id, pos1, pos2)
+    
+        # Verify sector changed
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT sector_id FROM space_objects WHERE id = %s
+                """, (obj_id,))
+                result = cur.fetchone()
+>               self.assertIsNotNone(result, "Failed to find updated object")
+E               AssertionError: unexpectedly None : Failed to find updated object
+
+tests/test_sector_manager.py:123: AssertionError
+_________________ TestShip.test_max_speed _________________
+
+self = <tests.test_ship.TestShip testMethod=test_max_speed>
+
+    def test_max_speed(self):
+        """Test maximum speed calculations"""
+        max_speed = self.ship.get_max_speed("WARP")
+>       self.assertEqual(max_speed, 6.75)  # 9.0 * (1 - 0.25)
+E       AssertionError: 9.99 != 6.75
+
+tests/test_ship.py:43: AssertionError
+================= short test summary info =================
+FAILED tests/test_sector_manager.py::TestSectorManager::test_sector_assignment - AssertionError: unexpectedly None : Failed to find upd...
+FAILED tests/test_ship.py::TestShip::test_max_speed - AssertionError: 9.99 != 6.75
+======== 2 failed, 40 passed, 1 skipped in 20.46s =========

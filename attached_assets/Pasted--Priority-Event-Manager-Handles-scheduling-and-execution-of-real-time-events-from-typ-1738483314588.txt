@@ -1,0 +1,165 @@
+"""
+Priority Event Manager
+
+Handles scheduling and execution of real-time events
+"""
+
+from typing import Dict, List, Callable, Optional
+from dataclasses import dataclass, field
+from evennia.scripts.tickerhandler import TickerHandler
+from evennia.utils import logger
+import heapq
+import time
+
+TICKER_HANDLER = TickerHandler()
+
+@dataclass(order=True)
+class Event:
+    """Event data structure"""
+    priority: int = field(compare=True)
+    timestamp: float = field(compare=True)
+    callback: Callable = field(compare=False)
+    args: tuple = field(default=(), compare=False)
+    kwargs: dict = field(default_factory=dict, compare=False)
+    
+    def __post_init__(self):
+        # Negate priority for reverse ordering (higher priority = earlier execution)
+        self.priority = -self.priority
+
+class PriorityEventManager:
+    """
+    Manages real-time game events with priority ordering.
+    Higher priority events execute first.
+    """
+
+    def __init__(self, use_ticker=True):
+        """
+        Initialize the event manager.
+        Args:
+            use_ticker (bool): Whether to use Evennia's ticker (False for testing)
+        """
+        self._event_queue: List[Event] = []
+        self._callbacks: Dict[str, Callable] = {}
+
+        # Event priorities
+        self.PRIORITIES = {
+            "movement": 100,
+            "combat": 90, 
+            "power": 80,
+            "shields": 70,
+            "sensors": 60,
+            "misc": 0
+        }
+
+        # Tick intervals and batch sizes
+        self.INTERVALS = {
+            "movement": 1.0,  # Process 10 movement updates per second
+            "combat": 1.0,    # Process 5 combat updates per second  
+            "power": 1.0,     # Process 1 power update per second
+            "sensors": 1.0,   # Process 1 sensor sweep per second
+            "shields": 1.0    # Process 2 shield updates per second
+        }
+        
+        # How many updates to process per tick
+        self.BATCH_SIZES = {
+            "movement": 10,  # 10 updates = ~100ms equivalent
+            "combat": 5,     # 5 updates = ~200ms equivalent
+            "power": 1,
+            "sensors": 1,
+            "shields": 2     # 2 updates = ~500ms equivalent
+        }
+
+        if use_ticker:
+            self.start_tickers()
+
+    def start_tickers(self):
+        """Start all ticker handlers"""
+        for system, interval in self.INTERVALS.items():
+            TICKER_HANDLER.add(interval, self.tick, idstring=system)
+
+    def stop_tickers(self):
+        """Stop all ticker handlers"""
+        for system in self.INTERVALS.keys():
+            TICKER_HANDLER.remove(idstring=system)
+
+    def tick(self, system=None):
+        """
+        Main tick handler, processes events in batches based on priority
+        
+        Args:
+            system (str): The system being processed (movement, combat, etc)
+        """
+        current_time = time.time()
+        batch_size = self.BATCH_SIZES.get(system, 1)
+        processed = 0
+
+        while self._event_queue and processed < batch_size:
+            event = heapq.heappop(self._event_queue)
+
+            if event.timestamp > current_time:
+                heapq.heappush(self._event_queue, event)
+                break
+
+            try:
+                # Process multiple updates for this system
+                for _ in range(batch_size):
+                    event.callback(*event.args, **event.kwargs)
+                processed += 1
+            except Exception as e:
+                logger.log_err(f"Error in event {event}: {e}")
+
+    def add_event(self, callback: Callable, priority: int = 0, delay: float = 0, *args, **kwargs):
+        """
+        Add new event to queue
+
+        Args:
+            callback (Callable): Function to call
+            priority (int): Event priority (higher = sooner)
+            delay (float): Delay in seconds before execution
+        """
+        timestamp = time.time() + delay
+        event = Event(
+            priority=priority,
+            timestamp=timestamp,
+            callback=callback,
+            args=args,
+            kwargs=kwargs
+        )
+        heapq.heappush(self._event_queue, event)
+
+    def register_callback(self, name: str, callback: Callable):
+        """Register a named callback"""
+        self._callbacks[name] = callback
+
+    def remove_callback(self, name: str):
+        """Remove a registered callback"""
+        if name in self._callbacks:
+            del self._callbacks[name]
+
+    def get_callback(self, name: str) -> Optional[Callable]:
+        """Get registered callback by name"""
+        return self._callbacks.get(name)
+
+    def clear_events(self):
+        """Clear all pending events"""
+        self._event_queue = []
+
+    def get_queue_size(self) -> int:
+        """Get number of pending events"""
+        return len(self._event_queue)
+
+    def get_next_event_time(self) -> Optional[float]:
+        """Get timestamp of next event"""
+        if self._event_queue:
+            return self._event_queue[0].timestamp
+        return None
+
+# Global event manager instance
+EVENTS = None
+
+def get_event_manager():
+    """Get or create the global event manager instance"""
+    global EVENTS
+    if EVENTS is None:
+        EVENTS = PriorityEventManager()
+    return EVENTS

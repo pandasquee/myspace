@@ -1,0 +1,172 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 43 items                                                             
+
+tests/test_power_manager.py::TestPowerManager::test_allocation_report SKIPPED [  2%]
+tests/test_power_manager.py::TestPowerManager::test_db_perFAILED [  4%]
+tests/test_power_manager.py::TestPowerManager::test_power_allocation FAILED [  6%]
+tests/test_power_manager.py::TestPowerManager::test_power_distribution PASSED [  9%]
+tests/test_power_manager.py::TestPowerManager::test_power_generation PASSED [ 11%]
+tests/test_power_manager.py::TestPowerManager::test_power_validation PASSED [ 13%]
+tests/test_priority_manager.py::test_event_priorities PASSED [ 16%]
+tests/test_priority_manager.py::test_delayed_events PASSED [ 18%]
+tests/test_priority_manager.py::test_batch_processing PASSED [ 20%]
+tests/test_priority_manager.py::test_callback_registration PASSED [ 23%]
+tests/test_priority_manager.py::test_queue_management PASSED [ 25%]
+tests/test_priority_manager.py::test_global_instance PASSED [ 27%]
+tests/test_priority_manager.py::test_system_specific_processing PASSED [ 30%]
+tests/test_priority_manager.py::test_error_handling PASSED [ 32%]
+tests/test_sector_manager.py::TestSectorManager::test_nearby_sectors PASSED [ 34%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_assignment PASSED [ 37%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_boundaries PASSED [ 39%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_creation PASSED [ 41%]
+tests/test_ship.py::TestShip::test_engine_power_scaling FAILED [ 44%]
+tests/test_ship.py::TestShip::test_life_support_power PASSED [ 46%]
+tests/test_ship.py::TestShip::test_max_speed FAILED [ 48%]
+tests/test_ship.py::TestShip::test_weapon_power_requirements PASSED [ 51%]
+tests/test_spaceobject.py::TestSpaceObject::test_engine_systems PASSED [ 53%]
+tests/test_spaceobject.py::TestSpaceObject::test_movement_system PASSED [ 55%]
+tests/test_spaceobject.py::TestSpaceObject::test_object_id PASSED [ 58%]
+tests/test_spaceobject.py::TestSpaceObject::test_power_allocation PASSED [ 60%]
+tests/test_spaceobject.py::TestSpaceObject::test_power_output PASSED [ 62%]
+tests/test_spaceobject.py::TestSpaceObject::test_sensor_resolution PASSED [ 65%]
+tests/test_spaceobject.py::TestSpaceObject::test_shield_strength PASSED [ 67%]
+tests/test_spaceobject.py::TestSpaceObject::test_status_flags PASSED [ 69%]
+tests/test_spaceobject.py::TestSpaceObject::test_structure PASSED [ 72%]
+tests/test_spaceobject.py::TestSpaceObject::test_tech_levels PASSED [ 74%]
+tests/test_spaceobject.py::TestSpaceObject::test_version_tracking PASSED [ 76%]
+tests/test_spaceobject.py::TestSpaceObject::test_weapon_systems PASSED [ 79%]
+tests/test_station.py::TestStation::test_docking_system PASSED [ 81%]
+tests/test_station.py::TestStation::test_power_systems PASSED [ 83%]
+tests/test_station.py::TestStation::test_repair_and_resupply_with_events PASSED [ 86%]
+tests/test_station.py::TestStation::test_station_systems PASSED [ 88%]
+tests/test_station_events.py::TestStationEvents::test_docking_events PASSED [ 90%]
+tests/test_station_events.py::TestStationEvents::test_event_priorities PASSED [ 93%]
+tests/test_station_events.py::TestStationEvents::test_multiple_system_updates PASSED [ 95%]
+tests/test_station_events.py::TestStationEvents::test_power_system_updates PASSED [ 97%]
+tests/test_station_events.py::TestStationEvents::test_station_initialization PASSED [100%]
+
+======================== FAILURES =========================
+__________ TestPowerManager.test_db_persistence ___________
+
+self = <tests.test_power_manager.TestPowerManager testMethod=test_db_persistence>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+        self.obj = self.create_object(SpaceObject, key="Test Object")
+    
+        # Initialize power systems in database with 1TW main, 100GW aux, 50GW battery
+        power_systems = {
+            "main": {"exist": True, "out": 1000.0},  # 1TW = 1000GW
+            "aux": {"exist": True, "out": 100.0},    # 100GW
+            "batt": {"exist": True, "out": 50.0}     # 50GW
+        }
+    
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM space_objects WHERE key = 'Test Object'")
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        id, key, object_type, status, power_systems
+                    ) VALUES (%s, %s, %s, %s, %s)
+                """, (
+                    self.obj.id,
+                    "Test Object",
+                    "ship",
+                    '{"active": true}',
+                    json.dumps(power_systems)
+                ))
+E               psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "space_objects_pkey"
+E               DETAIL:  Key (id)=(1) already exists.
+
+tests/test_power_manager.py:27: UniqueViolation
+_________ TestPowerManager.test_power_allocation __________
+
+self = <tests.test_power_manager.TestPowerManager testMethod=test_power_allocation>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+        self.obj = self.create_object(SpaceObject, key="Test Object")
+    
+        # Initialize power systems in database with 1TW main, 100GW aux, 50GW battery
+        power_systems = {
+            "main": {"exist": True, "out": 1000.0},  # 1TW = 1000GW
+            "aux": {"exist": True, "out": 100.0},    # 100GW
+            "batt": {"exist": True, "out": 50.0}     # 50GW
+        }
+    
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM space_objects WHERE key = 'Test Object'")
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        id, key, object_type, status, power_systems
+                    ) VALUES (%s, %s, %s, %s, %s)
+                """, (
+                    self.obj.id,
+                    "Test Object",
+                    "ship",
+                    '{"active": true}',
+                    json.dumps(power_systems)
+                ))
+E               psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "space_objects_pkey"
+E               DETAIL:  Key (id)=(2) already exists.
+
+tests/test_power_manager.py:27: UniqueViolation
+___________ TestShip.test_engine_power_scaling ____________
+
+self = <tests.test_ship.TestShip testMethod=test_engine_power_scaling>
+
+    def test_engine_power_scaling(self):
+        """Test engine power scaling at different speeds"""
+        self.ship.ndb.speed_mode = "WARP"
+    
+        # Test warp power curve
+        speeds = [1.0, 2.0, 3.0]
+        for speed in speeds:
+            self.ship.ndb.velocity = speed
+>           power = self.ship.calculate_engine_power()
+
+tests/test_ship.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <typeclass.ship.Ship object at 0x7f5ad9738510>
+
+    def calculate_engine_power(self) -> float:
+        """Calculate power needed for current engine configuration in GW."""
+        if not hasattr(self.ndb, 'speed_mode') or not hasattr(self.ndb, 'velocity'):
+            return 0.0
+    
+        move_ratio = self.db.engine.get("move_ratio", 3.0)
+    
+        if self.ndb.speed_mode == "WARP":
+            # P_warp = MoveRatio * (WarpFactor^2.5) * 0.1 * Cochrane adjustment
+            warp_factor = self.ndb.velocity
+            base_power = move_ratio * (warp_factor ** 2.5) * 0.1
+>           return base_power * (COCHRANE / 10000.0)  # Scale Cochrane constant
+E           NameError: name 'COCHRANE' is not defined
+
+typeclass/ship.py:99: NameError
+_________________ TestShip.test_max_speed _________________
+
+self = <tests.test_ship.TestShip testMethod=test_max_speed>
+
+    def test_max_speed(self):
+        """Test maximum speed calculations"""
+        max_speed = self.ship.get_max_speed("WARP")
+>       self.assertEqual(max_speed, 6.75)  # 9.0 * (1 - 0.25)
+E       AssertionError: 9.99 != 6.75
+
+tests/test_ship.py:43: AssertionError
+================= short test summary info =================
+FAILED tests/test_power_manager.py::TestPowerManager::test_db_persistence - psycopg2.errors.UniqueViolation: duplicate key value v...
+FAILED tests/test_power_manager.py::TestPowerManager::test_power_allocation - psycopg2.errors.UniqueViolation: duplicate key value v...
+FAILED tests/test_ship.py::TestShip::test_engine_power_scaling - NameError: name 'COCHRANE' is not defined
+FAILED tests/test_ship.py::TestShip::test_max_speed - AssertionError: 9.99 != 6.75
+======== 4 failed, 38 passed, 1 skipped in 16.37s =========

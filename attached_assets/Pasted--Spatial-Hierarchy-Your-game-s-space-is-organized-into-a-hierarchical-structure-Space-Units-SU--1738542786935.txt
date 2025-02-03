@@ -1,0 +1,55 @@
+. Spatial Hierarchy
+Your game's space is organized into a hierarchical structure:
+
+Space Units (SU) – The base unit of measurement for precise location tracking.
+Parsecs (PC) – A larger unit used to group Space Units into a structured galactic map.
+Sectors – The fundamental partition of space, each spanning 10×10 parsecs.
+Quadrants – Larger zones inspired by Star Trek, grouping multiple sectors.
+Galaxy – The entire playable universe, composed of infinite sectors.
+2. Sector Structure
+Each sector is a fixed 10×10 parsec area, with a flattened Z-axis beyond ±500 parsecs. This means:
+
+Sectors extend infinitely in the X-Y plane.
+The Z-axis is capped at ±500 parsecs for gameplay purposes.
+The Galactic Center (0,0) serves as a reference point.
+Sectors are identified using a naming system:
+
+Example: G-3.5 represents a sector in the Gamma Quadrant, located at (3,5).
+3. Location and Positioning
+Ships track positions in SU (Space Units).
+Sector IDs are assigned based on parsec-scale coordinates.
+Each sector has a hard border—ships transition between sectors when their position crosses a sector boundary.
+4. Sensors and Scanning System
+Short-Range Sensors (SRS)
+Work within a single sector.
+Provide detailed ship scans, including heading, speed, power, and weapons.
+Are continuous but can be blocked by cloaking, ECM, or environmental factors.
+Long-Range Sensors (LRS)
+Detect ships across multiple sectors.
+Provide position, speed, and heading but with limited details.
+Can scan a limited number of sectors based on performance constraints.
+Are affected by stealth, ECM, and distance.
+Binary Detection Model
+Ships are either detected or not (probability-based).
+LRS may lose contact due to movement or interference.
+Active scans reveal the scanning ship’s position.
+5. Sector Updates & Real-Time Processing
+Your system processes multiple active sectors simultaneously:
+
+Ships in active sectors are updated in real-time.
+Inactive sectors do not update until they are activated (e.g., by ship entry).
+The sector list dynamically manages active sectors, ensuring performance efficiency.
+6. Movement Mechanics
+Ships transition sectors automatically when moving across sector borders.
+Intra-sector movement is continuous, with positions stored in SU.
+Warp speeds impact sector transitions, requiring efficient position updates.
+7. Performance Optimizations
+Sector-based partitioning reduces the number of ships checked for interactions.
+SRS updates only ships in the same sector.
+LRS updates occur at lower frequencies to balance detail and performance.
+Conclusion
+Your sector-based space management system provides: ✔ Scalable space partitioning for an infinite universe.
+✔ Efficient real-time movement and interactions.
+✔ Sector-based sensor mechanics to reduce processing load.
+✔ Binary detection for ships, supporting ECM, cloaking, and stealth tactics.
+✔ Multi-sector active processing for real-time combat and exploration.

@@ -1,0 +1,143 @@
+﻿Evennia Real-Time Space Engine with PostgreSQL & PostGIS
+Proposed Directory Structure
+myspace/
+├── world/
+│   ├── constants.py
+│   ├── database/
+│   │   ├── schema.sql  # PostgreSQL & PostGIS schema definitions
+│   │   ├── queries.py  # Predefined spatial queries
+│   ├── sectors/
+│   │   ├── sector_manager.py  # Handles sector tracking and updates
+├── typeclass/
+│   ├── spaceobject.py  # Base class for all space entities
+│   ├── ship.py  # Specific class for ship entities
+│   ├── station.py  # Class for space stations
+│   ├── planet.py  # Class for planets and large celestial bodies
+│   ├── deck.py  # Defines decks/neighborhoods for space objects
+│   ├── room.py  # Handles individual rooms within decks
+│   ├── organizations/
+│   │   ├── federation.py  # Defines standard Federation ships and security rules
+│   │   ├── klingon.py  # Defines Klingon ship classes and attributes
+│   │   ├── bajoran.py  # Defines Bajoran ship classes and attributes
+│   │   ├── rebel_alliance.py  # Defines Rebel Alliance ships and traits
+├── ship_prototypes/
+│   ├── federation.json  # Contains standardized ship classes like Galaxy-Class
+│   ├── klingon.json  # Contains Klingon ship classes like Bird of Prey
+│   ├── bajoran.json  # Contains Bajoran ship classes like Akorem II
+│   ├── rebel_alliance.json  # Contains ship classes like X-Wing, Death Star
+├── commands/
+│   ├── engineering.py  # Ship system management commands
+│   ├── helm.py  # Navigation and movement commands
+│   ├── tactical.py  # Combat and targeting commands
+│   ├── sensors.py  # Sensor scanning and tracking commands
+│   ├── operations.py  # Resource and crew management
+│   ├── security.py  # Ship security commands
+├── managers/
+│   ├── power_manager.py  # Handles power distribution among ship systems
+│   ├── sensor_manager.py  # Handles sensor updates and detection
+│   ├── navigation.py  # Handles ship movement logic
+└── scripts/
+    ├── tick_update.py  # Periodic update script for game logic
+    ├── sector_update.py  # Background updates for active sectors
+    ├── power_allocation.py  # Automatic power balancing
+
+
+________________
+
+
+Key Enhancements
+1. Type Safety & Data Validation
+* Uses Python type hints for clear function interfaces.
+* Validates all data upon deserialization, ensuring all required fields are present.
+* Custom DeserializationError exception for debugging.
+* Graceful fallbacks to default values to prevent system crashes.
+* Ensures relationships between attributes remain consistent.
+2. Advanced Power Allocation & Subsystem Prioritization
+* Main, Auxiliary, and Battery Power Pools
+   * Ships have a dedicated power management system.
+   * Power is dynamically allocated across subsystems.
+   * If a subsystem has no allocated power, it remains non-operational.
+* Proportional Distribution System
+   * When power is low, systems receive proportional power rather than failing outright.
+   * Tactical power (weapons/shields) has priority in combat.
+* Fuel Efficiency & Stealth Mechanics
+   * Lower reactor output conserves fuel.
+   * Running at lower output makes the ship harder to detect via LRS scans.
+3. Combat Mechanics & Shield Facing System
+* Shields Are Divided Into Six Facings:
+   * Front, Rear, Port, Starboard, Dorsal, Ventral.
+   * Each facing has independent power allocation.
+* Beam & Missile Weapons:
+   * Beam weapons fire within a defined firing arc.
+   * Missiles can be targeted at any facing, but require tracking time.
+* Damage Model:
+   * Damage is distributed across shield facings.
+   * When shields collapse, damage transfers to the hull.
+4. Electronic Warfare (ECM/ECCM) & Advanced Sensor Mechanics
+Sensor Types:
+* Short-Range Sensors (SRS): Active within a single sector.
+* Long-Range Sensors (LRS): Can detect objects across multiple sectors.
+* Focused Scans: Concentrate sensor energy on a single object.
+* Electronic Warfare (ECM/ECCM): Ships can attempt to jam sensors or counter-jamming efforts.
+LRS Detection Model Based on Resolution:
+Detection Level
+	Distance (Sectors)
+	Information Gained
+	No Detection
+	Beyond range
+	Nothing detected
+	Faint Signal
+	6-10 sectors away
+	A blip on sensors
+	Basic Contact
+	3-6 sectors away
+	Object detected; size estimated
+	Partial Profile
+	1-3 sectors away
+	Ship class, speed, heading
+	Full Profile
+	Within 1 sector
+	Full ship details, power levels
+	Probabilistic Sensor Returns:
+Detection is determined by:
+* Sensor Power vs. Distance Squared.
+* ECM Penalty (reduces accuracy).
+* Resolution Setting (low-power scans detect more objects but with less detail).
+Formula for Detection Probability:
+Pdetection = Sensor Power / (Distance^2 + ECM Penalty)
+
+
+* If P > Threshold, the ship is detected.
+* Otherwise, detection is uncertain or incomplete.
+5. Game Ticker & Update Priority
+* High-Priority Events:
+   * Combat actions, sensor detection updates, and subsystem failures.
+* Lower-Priority Events:
+   * Background sensor sweeps, long-term travel, and passive power draw.
+* Batch Processing:
+   * Multiple updates processed together, reducing system strain.
+6. Database Schema for Real-Time Sensor Data
+Example PostgreSQL Table for Sensor Contacts
+CREATE TABLE sensor_contacts (
+    ship_id INT REFERENCES spaceobjects(id),
+    contact_id INT REFERENCES spaceobjects(id),
+    detection_level FLOAT,
+    distance FLOAT,
+    last_updated TIMESTAMP DEFAULT now()
+);
+
+
+* Stores detection levels & distances of sensor scans.
+* Efficient query system for real-time sensor tracking.
+________________
+
+
+Conclusion & Next Steps
+What’s Implemented:
+✅ PostgreSQL + PostGIS for efficient spatial queries. ✅ ECM & ECCM mechanics for stealth & electronic warfare. ✅ Fuel & reactor efficiency models. ✅ Faction-based ship classes stored in JSON. ✅ Batched update system for performance optimization.
+Future Work:
+🔲 AI-driven ship movement & sector patrol logic. 🔲 Expansion of docking & planetary landing mechanics. 🔲 Implementation of modular ship upgrades & retrofits.
+________________
+
+
+This document now includes all missing elements from MySpace Evennia Space Engine except for real-time processing details, collision avoidance, and fine-grid positioning. Let me know if you need further modifications! 🚀

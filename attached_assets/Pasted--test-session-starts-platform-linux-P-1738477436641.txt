@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 0 items / 3 errors                                       
+
+============================== ERRORS ==============================
+___________ ERROR collecting tests/test_power_manager.py ___________
+/home/runner/workspace/tests/test_power_manager.py:4: in <module>
+    from typeclass.spaceobject import SpaceObject
+/home/runner/workspace/typeclass/spaceobject.py:41: in <module>
+    class SpaceObject(DefaultObject):
+E   TypeError: NoneType takes no arguments
+------------------------- Captured stdout --------------------------
+secret_settings.py file not found or failed to import.
+Database not available yet - using temporary fallback for create managers.
+Database not available yet - using temporary fallback for search managers.
+_______________ ERROR collecting tests/test_ship.py ________________
+/home/runner/workspace/tests/test_ship.py:3: in <module>
+    from typeclass.ship import Ship
+/home/runner/workspace/typeclass/ship.py:5: in <module>
+    from .spaceobject import SpaceObject
+/home/runner/workspace/typeclass/spaceobject.py:41: in <module>
+    class SpaceObject(DefaultObject):
+E   TypeError: NoneType takes no arguments
+____________ ERROR collecting tests/test_spaceobject.py ____________
+/home/runner/workspace/tests/test_spaceobject.py:3: in <module>
+    from typeclass.spaceobject import SpaceObject
+/home/runner/workspace/typeclass/spaceobject.py:41: in <module>
+    class SpaceObject(DefaultObject):
+E   TypeError: NoneType takes no arguments
+========================= warnings summary =========================
+.pythonlibs/lib/python3.11/site-packages/django/db/models/options.py:210
+  /home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/db/models/options.py:210: RemovedInDjango51Warning: 'index_together' is deprecated. Use 'Meta.indexes' in 'typeclasses.Tag' instead.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+===================== short test summary info ======================
+ERROR tests/test_power_manager.py - TypeError: NoneType takes no arguments
+ERROR tests/test_ship.py - TypeError: NoneType takes no arguments
+ERROR tests/test_spaceobject.py - TypeError: NoneType takes no arguments
+!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!
+=================== 1 warning, 3 errors in 2.11s ===================

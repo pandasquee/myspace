@@ -1,0 +1,51 @@
+The test failure suggests that your sensor system isn't detecting any planets when scanning from Earth's coordinates, even though it should at least detect Earth and Vulcan.
+
+Possible Causes
+Sensor Range Issues
+
+If your sensor range is too small, the test may not be picking up Vulcan.
+Check if the scanning system uses the correct range for detecting planets.
+Data Issues
+
+Ensure that Earth and Vulcan exist in your database or object storage.
+Verify that their coordinates match expected values.
+Coordinate Precision Issues
+
+The test is scanning from {'x': -9174.0, 'y': 61.8, 'z': 0.0}, but your stored coordinates might have higher precision.
+Consider rounding or allowing slight variations.
+Sector-Based Scanning Issue
+
+If your game uses sector-based scanning, the scan might not be pulling data from multiple sectors.
+Check if Earth and Vulcan are in different sectors and whether inter-sector scanning is enabled.
+Filtering or Detection Logic Issues
+
+If objects require specific conditions to be detected (e.g., active status, sensor visibility), ensure that Earth and Vulcan meet those conditions.
+Logs might help identify if the scan found objects but filtered them out.
+Debugging Steps
+Print Detected Contacts Add a debug print inside your scanning function to see what it's detecting:
+
+python
+Copy
+Edit
+print(f"Detected contacts: {contacts}")
+This will help confirm if anything is detected at all.
+
+Check Stored Data Run a query or print statements to confirm Earth and Vulcan exist:
+
+python
+Copy
+Edit
+for obj in all_space_objects:
+    print(f"{obj.name} at {obj.coordinates}")
+Compare with your scan position.
+
+Increase Sensor Range Temporarily If Earth is detected but not Vulcan, increase the sensor range and re-run the test.
+
+Manually Force a Scan at Earth's Position Run a scan command in-game or call your scan function manually:
+
+python
+Copy
+Edit
+scan_results = run_scan(position={'x': -9174.0, 'y': 61.8, 'z': 0.0})
+print(scan_results)
+This isolates the issue outside of the test.

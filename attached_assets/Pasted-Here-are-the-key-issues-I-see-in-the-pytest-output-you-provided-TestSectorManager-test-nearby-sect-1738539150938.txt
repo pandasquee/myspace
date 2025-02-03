@@ -1,0 +1,33 @@
+Here are the key issues I see in the pytest output you provided:
+
+TestSectorManager.test_nearby_sectors is failing with an AssertionError. It expects len(nearby) to be greater than 1, but it is equal to 1. This suggests the get_nearby_sectors method is not finding the expected number of nearby sectors.
+TestSectorManager.test_sector_assignment is failing with an AssertionError saying "Failed to find updated object". After moving the test object to a new sector, it is querying the database to verify the sector_id was updated, but the query is returning None unexpectedly. There may be an issue with the update_object_sector method.
+TestSpatialQueries.test_hit_chance, test_object_detection, and test_pathfinding are all failing with an InvalidParameterValue error from psycopg2. The error states "Geometry type (Point) does not match column type (LineString)".
+
+In the setUp method, it is trying to insert test objects with position and orientation columns defined as geometry(pointz, 3857). But the error indicates those columns are actually of type LineString.
+It seems the schema expects LineString geometry types for those columns, but points are being inserted. The geometry types need to match between the INSERT statement and the table definition.
+In summary, the main issues are:
+
+Unexpected results in sector manager tests around finding nearby sectors and updating sector assignments
+Mismatch between geometry types being inserted vs what the database schema expects for spatial queries tests
+
+I'd recommend:
+
+Double checking the logic in get_nearby_sectors and update_object_sector methods
+Verifying the space_objects table schema matches the types being inserted in the tests
+Ensuring the right geometry types are used for spatial queries to avoid type mismatches
+
+Let me know if you have any other questions! I'm happy to dig in further. CopyRetryAwe are using simple point, not complex geometric shapesEditUnderstood. Since you are using simple Point geometry and not complex shapes like LineStrings, the issue likely lies in how the position and orientation columns are defined in your space_objects table schema.
+Based on the error messages, it seems those columns are currently defined as type LineString:
+sqlCopyposition geometry(LineStringZ, 3857), 
+orientation geometry(LineStringZ, 3857)
+However, your test setup is trying to insert Point geometries into those columns:
+sqlCopyST_SetSRID(ST_MakePoint(0, 0, 0), 3857)::geometry(pointz, 3857),  -- position
+ST_SetSRID(ST_MakePoint(10, 0, 0), 3857)::geometry(pointz, 3857), -- orientation
+To resolve the InvalidParameterValue errors, you'll need to modify the schema to expect Point geometries instead of LineStrings. Something like:
+sqlCopyposition geometry(PointZ, 3857),
+orientation geometry(PointZ, 3857)
+This will allow the ST_MakePoint geometries you are inserting in the tests to match the expected column types.
+After adjusting the schema, I recommend re-running the spatial queries tests to confirm the geometry type mismatch is resolved.
+As for the sector manager test failures, those will likely need further debugging to understand why get_nearby_sectors and update_object_sector are not producing the expected results. Let me know if you would like help digging into those specific methods as well.
+The key takeaway is to ensure consistency between the geometry types being inserted/queried and what the database schema expects. PostgreSQL is strict about enforcing geometry type matches.

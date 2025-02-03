@@ -1,0 +1,15 @@
+[project]
+name = "repl-nix-workspace"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "dj-database-url>=2.3.0",
+    "evennia>=4.5.0",
+    "flask-login>=0.6.3",
+    "flask-wtf>=1.2.2",
+    "oauthlib>=3.2.2",
+    "psycopg2-binary>=2.9.10",
+    "pytest-asyncio>=0.25.3",
+    "pytest>=8.3.4",
+]

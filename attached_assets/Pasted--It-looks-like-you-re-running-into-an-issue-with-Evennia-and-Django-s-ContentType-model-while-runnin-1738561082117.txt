@@ -1,0 +1,126 @@
+
+It looks like you're running into an issue with Evennia and Django's ContentType model while running your tests. Here are some steps to troubleshoot and fix the issue:
+
+1. Apply Migrations
+The error suggests that the ContentType table might not be populated correctly. Run the following commands inside your Evennia environment:
+
+sh
+Copy
+Edit
+evennia migrate
+If you are using a virtual environment, make sure you activate it first.
+
+Alternatively, if running Django directly:
+
+sh
+Copy
+Edit
+python manage.py migrate
+This ensures that all Django apps, including contenttypes, have the correct database schema.
+
+2. Check If ContentTypes Are Populated
+After running migrations, check whether the ContentType table has entries:
+
+sh
+Copy
+Edit
+python manage.py shell
+Then run:
+
+python
+Copy
+Edit
+from django.contrib.contenttypes.models import ContentType
+ContentType.objects.all()
+If it returns an empty list, your migrations might not have run correctly.
+
+3. Rebuild the Database (If Needed)
+If the above doesn't work and you are in development, try resetting your database:
+
+sh
+Copy
+Edit
+evennia reset
+If using Django directly:
+
+sh
+Copy
+Edit
+python manage.py flush
+python manage.py migrate
+⚠ WARNING: This will delete all data in your database, so only do this if you’re sure you don’t need the existing data.
+
+4. Check for Deprecation Warning (index_together)
+You're also seeing this warning:
+
+csharp
+Copy
+Edit
+'index_together' is deprecated. Use 'Meta.indexes' in 'typeclasses.Tag' instead.
+If typeclasses.Tag is a custom model in your Evennia setup, check its Meta class inside typeclasses/tag.py or wherever it’s defined.
+
+Old (deprecated) way:
+
+python
+Copy
+Edit
+class Meta:
+    index_together = [["field1", "field2"]]
+New way (Django 5+ compatible):
+
+python
+Copy
+Edit
+from django.db import models
+
+class Meta:
+    indexes = [models.Index(fields=["field1", "field2"])]
+Modify this if necessary and restart the server.
+
+5. Check for Evennia Updates
+Since you’re running Evennia, it’s possible that you're using an outdated version incompatible with your Django version. Check if an update is available:
+
+sh
+Copy
+Edit
+pip install --upgrade evennia
+6. Reinstall Dependencies
+If the issue persists, try reinstalling your dependencies:
+
+sh
+Copy
+Edit
+pip install --force-reinstall -r requirements.txt
+7. Ensure You’re Running in the Correct Environment
+If you have multiple Python environments, ensure you're running in the right one:
+
+sh
+Copy
+Edit
+which python
+which evennia
+If needed, activate the correct virtual environment:
+
+sh
+Copy
+Edit
+source /path/to/venv/bin/activate  # On Mac/Linux
+venv\Scripts\activate  # On Windows
+8. Restart Everything
+After trying the above steps, restart your Evennia server:
+
+sh
+Copy
+Edit
+evennia stop
+evennia start
+And retry your tests.
+
+Final Note
+If you’re still seeing ContentType matching query does not exist, your database may be corrupted. You might need to manually delete and recreate it.
+
+sh
+Copy
+Edit
+rm db.sqlite3  # Or drop PostgreSQL tables if using PostGIS
+evennia migrate

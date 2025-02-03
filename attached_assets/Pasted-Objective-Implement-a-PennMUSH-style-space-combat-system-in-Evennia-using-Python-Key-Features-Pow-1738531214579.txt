@@ -1,0 +1,103 @@
+Objective: Implement a PennMUSH-style space combat system in Evennia using Python.
+Key Features: Power allocation, capacitor charging, weapon firing with cooldowns, and sensor visibility updates.
+
+🔹 Power Allocation & Capacitor Charging
+Implement power allocation commands (e.g., +power/set beams=40%).
+Capacitors recharge every second based on allocated power.
+Store capacitor values in .ndb (temporary memory) to avoid excessive DB writes.
+Example Functionality:
+
+python
+Copy
+Edit
+from evennia import utils
+
+class Ship:
+    def start_power_loop(self):
+        """Starts a recurring event that updates capacitors every second."""
+        if not self.ndb.power_event:
+            self.ndb.power_event = utils.delay(1, self.update_capacitors)
+
+    def update_capacitors(self):
+        """Updates beam and missile capacitor charge based on allocated power."""
+        dt = 1  # 1-second update cycle
+
+        if self.ndb.beam_capacitor < self.ndb.beam_cap_max:
+            self.ndb.beam_capacitor += self.ndb.power_alloc_beams * self.ndb.total_power * dt
+            self.ndb.beam_capacitor = min(self.ndb.beam_capacitor, self.ndb.beam_cap_max)
+
+        if self.ndb.missile_capacitor < self.ndb.missile_cap_max:
+            self.ndb.missile_capacitor += self.ndb.power_alloc_missiles * self.ndb.total_power * dt
+            self.ndb.missile_capacitor = min(self.ndb.missile_capacitor, self.ndb.missile_cap_max)
+
+        self.ndb.power_event = utils.delay(1, self.update_capacitors)
+🔹 Weapon System & Cooldowns
+Each ship has a list of weapons with individual damage, bonus, cost, arc, and cooldown.
+Weapons consume capacitor charge when fired.
+Weapons enter cooldown mode after firing.
+Example Weapon System:
+
+python
+Copy
+Edit
+class Weapon:
+    def __init__(self, name, damage, bonus, cost, arc, cooldown):
+        self.name = name
+        self.damage = damage
+        self.bonus = bonus
+        self.cost = cost
+        self.arc = arc
+        self.cooldown = cooldown
+        self.ready = True  # Ready to fire
+
+    def fire(self, ship):
+        """Fires the weapon, consuming capacitor charge and triggering cooldown."""
+        if not self.ready:
+            ship.msg(f"{self.name} is still recharging!")
+            return False
+
+        if ship.ndb.beam_capacitor < self.cost:
+            ship.msg(f"Insufficient power to fire {self.name}!")
+            return False
+
+        ship.ndb.beam_capacitor -= self.cost
+        self.ready = False
+        utils.delay(self.cooldown, self.recharge, ship)
+
+        ship.msg(f"{self.name} fired!")
+        return True
+
+    def recharge(self, ship):
+        """Re-enables the weapon after cooldown."""
+        self.ready = True
+        ship.msg(f"{self.name} is ready to fire again!")
+🔹 Sensor Visibility & Cloaking
+Firing weapons increases sensor signature (reduces cloaking).
+Implement a cloaking system where ships cannot fire while cloaked (unless advanced tech is present).
+Example Sensor Update System:
+
+python
+Copy
+Edit
+def update_sensor_signature(self):
+    """Updates sensor visibility based on power usage and cloaking."""
+    base_signature = self.ndb.ship_mass ** (1/3) / self.ndb.tech_stealth / 100
+    visibility = base_signature * (1 + self.ndb.power_main / 10)
+
+    if self.ndb.beam_capacitor < self.ndb.beam_cap_max:
+        visibility *= 2
+    if self.ndb.missile_capacitor < self.ndb.missile_cap_max:
+        visibility *= 1.5
+
+    self.ndb.sensor_signature = visibility
+🔹 Final Deliverables
+✅ Ship Power Manager: Allocates power and recharges capacitors.
+✅ Weapon System: Tracks weapon stats, cooldowns, and energy usage.
+✅ Combat System: Handles firing logic, cooldowns, and energy drains.
+✅ Sensor & Cloaking: Dynamically updates sensor visibility based on weapons fire.
+
+🛠️ Implementation Instructions for Replit Assistant
+Modify the Ship class to include power allocation, capacitors, and real-time updates.
+Create a Weapon class that handles individual weapon cooldowns and energy costs.
+Implement a firing system that allows ships to fire based on capacitor charge.
+Update the sensor system to reflect weapon fire making ships more visible.

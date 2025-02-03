@@ -1,0 +1,39 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pytest.ini
+plugins: typeguard-4.4.1, asyncio-0.25.3
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function
+collected 53 items / 2 errors                                       
+
+============================== ERRORS ===============================
+_________ ERROR collecting tests/test_sensor_integration.py _________
+tests/test_sensor_integration.py:5: in <module>
+    from evennia.utils.test_resources import EvenniaTest
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/__init__.py:14: in <module>
+    from .utils import *
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/utils.py:44: in <module>
+    from evennia.utils import logger
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/logger.py:370: in <module>
+    class EvenniaLogFile(logfile.LogFile):
+.pythonlibs/lib/python3.11/site-packages/evennia/utils/logger.py:385: in EvenniaLogFile
+    _CHANNEL_LOG_NUM_TAIL_LINES = settings.CHANNEL_LOG_NUM_TAIL_LINES
+.pythonlibs/lib/python3.11/site-packages/django/conf/__init__.py:104: in __getattr__
+    val = getattr(_wrapped, name)
+.pythonlibs/lib/python3.11/site-packages/django/conf/__init__.py:331: in __getattr__
+    return getattr(self.default_settings, name)
+E   AttributeError: module 'django.conf.global_settings' has no attribute 'CHANNEL_LOG_NUM_TAIL_LINES'
+______________ ERROR collecting tests/test_station.py _______________
+tests/test_station.py:4: in <module>
+    from typeclass.station import Station
+typeclass/station.py:9: in <module>
+    from .rooms import SpaceObjectRoom
+typeclass/rooms.py:2: in <module>
+    class BridgeRoom(SpaceObjectRoom):
+E   NameError: name 'SpaceObjectRoom' is not defined
+====================== short test summary info ======================
+ERROR tests/test_sensor_integration.py - AttributeError: module 'django.conf.global_settings' has no attr...
+ERROR tests/test_station.py - NameError: name 'SpaceObjectRoom' is not defined
+!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!
+========================= 2 errors in 0.35s =========================

@@ -1,0 +1,135 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 43 items                                                             
+
+tests/test_power_manager.py::TestPowerManager::test_allocation_report SKIPPED [  2%]
+tests/test_power_manager.py::TestPowerManager::test_db_perPASSED [  4%]
+tests/test_power_manager.py::TestPowerManager::test_power_allocation PASSED [  6%]
+tests/test_power_manager.py::TestPowerManager::test_power_distribution PASSED [  9%]
+tests/test_power_manager.py::TestPowerManager::test_power_generation PASSED [ 11%]
+tests/test_power_manager.py::TestPowerManager::test_power_validation PASSED [ 13%]
+tests/test_priority_manager.py::test_event_priorities PASSED [ 16%]
+tests/test_priority_manager.py::test_delayed_events PASSED [ 18%]
+tests/test_priority_manager.py::test_batch_processing PASSED [ 20%]
+tests/test_priority_manager.py::test_callback_registration PASSED [ 23%]
+tests/test_priority_manager.py::test_queue_management PASSED [ 25%]
+tests/test_priority_manager.py::test_global_instance PASSED [ 27%]
+tests/test_priority_manager.py::test_system_specific_processing PASSED [ 30%]
+tests/test_priority_manager.py::test_error_handling PASSED [ 32%]
+tests/test_sector_manager.py::TestSectorManager::test_nearby_sectors PASSED [ 34%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_assignment FAILED [ 37%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_boundaries PASSED [ 39%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_creation PASSED [ 41%]
+tests/test_ship.py::TestShip::test_engine_power_scaling FAILED [ 44%]
+tests/test_ship.py::TestShip::test_life_support_power PASSED [ 46%]
+tests/test_ship.py::TestShip::test_max_speed FAILED [ 48%]
+tests/test_ship.py::TestShip::test_weapon_power_requirements PASSED [ 51%]
+tests/test_spaceobject.py::TestSpaceObject::test_engine_systems PASSED [ 53%]
+tests/test_spaceobject.py::TestSpaceObject::test_movement_system PASSED [ 55%]
+tests/test_spaceobject.py::TestSpaceObject::test_object_id PASSED [ 58%]
+tests/test_spaceobject.py::TestSpaceObject::test_power_allocation PASSED [ 60%]
+tests/test_spaceobject.py::TestSpaceObject::test_power_output PASSED [ 62%]
+tests/test_spaceobject.py::TestSpaceObject::test_sensor_resolution PASSED [ 65%]
+tests/test_spaceobject.py::TestSpaceObject::test_shield_strength PASSED [ 67%]
+tests/test_spaceobject.py::TestSpaceObject::test_status_flags PASSED [ 69%]
+tests/test_spaceobject.py::TestSpaceObject::test_structure PASSED [ 72%]
+tests/test_spaceobject.py::TestSpaceObject::test_tech_levels PASSED [ 74%]
+tests/test_spaceobject.py::TestSpaceObject::test_version_tracking PASSED [ 76%]
+tests/test_spaceobject.py::TestSpaceObject::test_weapon_systems PASSED [ 79%]
+tests/test_station.py::TestStation::test_docking_system PASSED [ 81%]
+tests/test_station.py::TestStation::test_power_systems PASSED [ 83%]
+tests/test_station.py::TestStation::test_repair_and_resupply_with_events PASSED [ 86%]
+tests/test_station.py::TestStation::test_station_systems PASSED [ 88%]
+tests/test_station_events.py::TestStationEvents::test_docking_events PASSED [ 90%]
+tests/test_station_events.py::TestStationEvents::test_event_priorities PASSED [ 93%]
+tests/test_station_events.py::TestStationEvents::test_multiple_system_updates PASSED [ 95%]
+tests/test_station_events.py::TestStationEvents::test_power_system_updates PASSED [ 97%]
+tests/test_station_events.py::TestStationEvents::test_station_initialization PASSED [100%]
+
+======================== FAILURES =========================
+________ TestSectorManager.test_sector_assignment _________
+
+self = <tests.test_sector_manager.TestSectorManager testMethod=test_sector_assignment>
+
+    def test_sector_assignment(self):
+        """Test assigning objects to sectors."""
+        # Create test positions
+        pos1 = (50.0, 50.0, 50.0)
+        pos2 = (150.0, 50.0, 50.0)
+    
+        # Create sectors
+        sector1_id = self.manager.get_sector_for_position(pos1)
+        sector2_id = self.manager.get_sector_for_position(pos2)
+        self.assertIsNotNone(sector1_id)
+        self.assertIsNotNone(sector2_id)
+    
+        # Create test object
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, status, power_systems
+                    ) VALUES (
+                        'TEST-Moving-Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(%s, %s, %s), 3857),
+                        '{"active": true}'::jsonb,
+                        '{"main": {"exist": true}}'::jsonb
+                    ) RETURNING id
+                """, pos1)
+                result = cur.fetchone()
+                self.assertIsNotNone(result, "Failed to create test object")
+                obj_id = result[0]
+    
+        # Move object to new sector
+        self.manager.update_object_sector(obj_id, pos1, pos2)
+    
+        # Verify sector changed
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT sector_id FROM space_objects WHERE id = %s
+                """, (obj_id,))
+                result = cur.fetchone()
+>               self.assertIsNotNone(result, "Failed to find updated object")
+E               AssertionError: unexpectedly None : Failed to find updated object
+
+tests/test_sector_manager.py:123: AssertionError
+___________ TestShip.test_engine_power_scaling ____________
+
+self = <tests.test_ship.TestShip testMethod=test_engine_power_scaling>
+
+    def test_engine_power_scaling(self):
+        """Test engine power scaling at different speeds"""
+        self.ship.ndb.speed_mode = "WARP"
+    
+        # Test warp power curve
+        speeds = [1.0, 2.0, 3.0]
+        for speed in speeds:
+            self.ship.ndb.velocity = speed
+            power = self.ship.calculate_engine_power()
+            expected = speed ** 3.0 * 100.0  # Using power_curve = 3.0
+>           self.assertEqual(power, expected)
+E           AssertionError: 0.38781714 != 100.0
+
+tests/test_ship.py:111: AssertionError
+_________________ TestShip.test_max_speed _________________
+
+self = <tests.test_ship.TestShip testMethod=test_max_speed>
+
+    def test_max_speed(self):
+        """Test maximum speed calculations"""
+        max_speed = self.ship.get_max_speed("WARP")
+>       self.assertEqual(max_speed, 6.75)  # 9.0 * (1 - 0.25)
+E       AssertionError: 9.99 != 6.75
+
+tests/test_ship.py:43: AssertionError
+================= short test summary info =================
+FAILED tests/test_sector_manager.py::TestSectorManager::test_sector_assignment - AssertionError: unexpectedly None : Failed to find upd...
+FAILED tests/test_ship.py::TestShip::test_engine_power_scaling - AssertionError: 0.38781714 != 100.0
+FAILED tests/test_ship.py::TestShip::test_max_speed - AssertionError: 9.99 != 6.75
+======== 3 failed, 39 passed, 1 skipped in 20.22s ========

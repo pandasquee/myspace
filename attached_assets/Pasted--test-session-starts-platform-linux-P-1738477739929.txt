@@ -1,0 +1,140 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 6 items                                                              
+
+tests/test_power_manager.py F                                [ 16%]
+tests/test_ship.py FF                                        [ 50%]
+tests/test_spaceobject.py FFF                                [100%]
+
+============================= FAILURES =============================
+______________ TestPowerManager.test_power_allocation ______________
+
+self = <tests.test_power_manager.TestPowerManager testMethod=test_power_allocation>
+
+    def setUp(self):
+>       super().setUp()
+
+/home/runner/workspace/tests/test_power_manager.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_power_manager.TestPowerManager testMethod=test_power_allocation>
+
+    def setUp(self):
+        super().setUp()
+>       self.account = self.create_account("TestAccount", email="test@test.com",
+                                         password="testpassword", typeclass=None)
+E       AttributeError: 'TestPowerManager' object has no attribute 'create_account'
+
+/home/runner/workspace/tests/conftest.py:19: AttributeError
+_____________________ TestShip.test_max_speed ______________________
+
+self = <tests.test_ship.TestShip testMethod=test_max_speed>
+
+    def setUp(self):
+>       super().setUp()
+
+/home/runner/workspace/tests/test_ship.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_ship.TestShip testMethod=test_max_speed>
+
+    def setUp(self):
+        super().setUp()
+>       self.account = self.create_account("TestAccount", email="test@test.com",
+                                         password="testpassword", typeclass=None)
+E       AttributeError: 'TestShip' object has no attribute 'create_account'
+
+/home/runner/workspace/tests/conftest.py:19: AttributeError
+_________________ TestShip.test_power_requirements _________________
+
+self = <tests.test_ship.TestShip testMethod=test_power_requirements>
+
+    def setUp(self):
+>       super().setUp()
+
+/home/runner/workspace/tests/test_ship.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_ship.TestShip testMethod=test_power_requirements>
+
+    def setUp(self):
+        super().setUp()
+>       self.account = self.create_account("TestAccount", email="test@test.com",
+                                         password="testpassword", typeclass=None)
+E       AttributeError: 'TestShip' object has no attribute 'create_account'
+
+/home/runner/workspace/tests/conftest.py:19: AttributeError
+________________ TestSpaceObject.test_power_output _________________
+
+self = <tests.test_spaceobject.TestSpaceObject testMethod=test_power_output>
+
+    def setUp(self):
+>       super().setUp()
+
+/home/runner/workspace/tests/test_spaceobject.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_spaceobject.TestSpaceObject testMethod=test_power_output>
+
+    def setUp(self):
+        super().setUp()
+>       self.account = self.create_account("TestAccount", email="test@test.com",
+                                         password="testpassword", typeclass=None)
+E       AttributeError: 'TestSpaceObject' object has no attribute 'create_account'
+
+/home/runner/workspace/tests/conftest.py:19: AttributeError
+______________ TestSpaceObject.test_sensor_resolution ______________
+
+self = <tests.test_spaceobject.TestSpaceObject testMethod=test_sensor_resolution>
+
+    def setUp(self):
+>       super().setUp()
+
+/home/runner/workspace/tests/test_spaceobject.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_spaceobject.TestSpaceObject testMethod=test_sensor_resolution>
+
+    def setUp(self):
+        super().setUp()
+>       self.account = self.create_account("TestAccount", email="test@test.com",
+                                         password="testpassword", typeclass=None)
+E       AttributeError: 'TestSpaceObject' object has no attribute 'create_account'
+
+/home/runner/workspace/tests/conftest.py:19: AttributeError
+_______________ TestSpaceObject.test_shield_strength _______________
+
+self = <tests.test_spaceobject.TestSpaceObject testMethod=test_shield_strength>
+
+    def setUp(self):
+>       super().setUp()
+
+/home/runner/workspace/tests/test_spaceobject.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.test_spaceobject.TestSpaceObject testMethod=test_shield_strength>
+
+    def setUp(self):
+        super().setUp()
+>       self.account = self.create_account("TestAccount", email="test@test.com",
+                                         password="testpassword", typeclass=None)
+E       AttributeError: 'TestSpaceObject' object has no attribute 'create_account'
+
+/home/runner/workspace/tests/conftest.py:19: AttributeError
+========================= warnings summary =========================
+.pythonlibs/lib/python3.11/site-packages/django/db/models/options.py:210
+  /home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/django/db/models/options.py:210: RemovedInDjango51Warning: 'index_together' is deprecated. Use 'Meta.indexes' in 'typeclasses.Tag' instead.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+===================== short test summary info ======================
+FAILED tests/test_power_manager.py::TestPowerManager::test_power_allocation - AttributeError: 'TestPowerManager' object has no attribute 'cre...
+FAILED tests/test_ship.py::TestShip::test_max_speed - AttributeError: 'TestShip' object has no attribute 'create_acco...
+FAILED tests/test_ship.py::TestShip::test_power_requirements - AttributeError: 'TestShip' object has no attribute 'create_acco...
+FAILED tests/test_spaceobject.py::TestSpaceObject::test_power_output - AttributeError: 'TestSpaceObject' object has no attribute 'crea...
+FAILED tests/test_spaceobject.py::TestSpaceObject::test_sensor_resolution - AttributeError: 'TestSpaceObject' object has no attribute 'crea...
+FAILED tests/test_spaceobject.py::TestSpaceObject::test_shield_strength - AttributeError: 'TestSpaceObject' object has no attribute 'crea...
+=================== 6 failed, 1 warning in 0.11s ===================

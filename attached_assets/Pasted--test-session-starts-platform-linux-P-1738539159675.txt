@@ -1,0 +1,258 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.10, pytest-8.3.4, pluggy-1.5.0 -- /home/runner/workspace/.pythonlibs/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/workspace
+configfile: pyproject.toml
+plugins: typeguard-4.4.1
+collected 53 items                                                             
+
+tests/test_power_manager.py::TestPowerManager::test_allocation_report SKIPPED [  1%]
+tests/test_power_manager.py::TestPowerManager::test_db_persistence PASSED                                                          [  3%]
+tests/test_power_manager.py::TestPowerManager::test_power_allocation PASSED                                                        [  5%]
+tests/test_power_manager.py::TestPowerManager::test_power_distribution PASSED                                                      [  7%]
+tests/test_power_manager.py::TestPowerManager::test_power_generation PASSED                                                        [  9%]
+tests/test_power_manager.py::TestPowerManager::test_power_validation PASSED                                                        [ 11%]
+tests/test_priority_manager.py::test_event_priorities PASSED                                                                       [ 13%]
+tests/test_priority_manager.py::test_delayed_events PASSED                                                                         [ 15%]
+tests/test_priority_manager.py::test_batch_processing PASSED                                                                       [ 16%]
+tests/test_priority_manager.py::test_callback_registration PASSED                                                                  [ 18%]
+tests/test_priority_manager.py::test_queue_management PASSED                                                                       [ 20%]
+tests/test_priority_manager.py::test_global_instance PASSED                                                                        [ 22%]
+tests/test_priority_manager.py::test_system_specific_processing PASSED                                                             [ 24%]
+tests/test_priority_manager.py::test_error_handling PASSED                                                                         [ 26%]
+tests/test_sector_manager.py::TestSectorManager::test_nearby_sectors FAILED                                                        [ 28%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_assignment FAILED                                                     [ 30%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_boundaries PASSED                                                     [ 32%]
+tests/test_sector_manager.py::TestSectorManager::test_sector_creation PASSED                                                       [ 33%]
+tests/test_ship.py::TestShip::test_engine_power_scaling PASSED                                                                     [ 35%]
+tests/test_ship.py::TestShip::test_life_support_power PASSED                                                                       [ 37%]
+tests/test_ship.py::TestShip::test_max_speed PASSED                                                                                [ 39%]
+tests/test_ship.py::TestShip::test_weapon_power_requirements PASSED                                                                [ 41%]
+tests/test_spaceobject.py::TestSpaceObject::test_engine_systems PASSED                                                             [ 43%]
+tests/test_spaceobject.py::TestSpaceObject::test_movement_system PASSED                                                            [ 45%]
+tests/test_spaceobject.py::TestSpaceObject::test_object_id PASSED                                                                  [ 47%]
+tests/test_spaceobject.py::TestSpaceObject::test_power_allocation PASSED                                                           [ 49%]
+tests/test_spaceobject.py::TestSpaceObject::test_power_output PASSED                                                               [ 50%]
+tests/test_spaceobject.py::TestSpaceObject::test_sensor_resolution PASSED                                                          [ 52%]
+tests/test_spaceobject.py::TestSpaceObject::test_shield_strength PASSED                                                            [ 54%]
+tests/test_spaceobject.py::TestSpaceObject::test_status_flags PASSED                                                               [ 56%]
+tests/test_spaceobject.py::TestSpaceObject::test_structure PASSED                                                                  [ 58%]
+tests/test_spaceobject.py::TestSpaceObject::test_tech_levels PASSED                                                                [ 60%]
+tests/test_spaceobject.py::TestSpaceObject::test_version_tracking PASSED                                                           [ 62%]
+tests/test_spaceobject.py::TestSpaceObject::test_weapon_systems PASSED                                                             [ 64%]
+tests/test_spatial_queries.py::TestSpatialQueries::test_hit_chance FAILED                                                          [ 66%]
+tests/test_spatial_queries.py::TestSpatialQueries::test_object_detection FAILED                                                    [ 67%]
+tests/test_spatial_queries.py::TestSpatialQueries::test_pathfinding FAILED                                                         [ 69%]
+tests/test_station.py::TestStation::test_docking_system PASSED                                                                     [ 71%]
+tests/test_station.py::TestStation::test_power_systems PASSED                                                                      [ 73%]
+tests/test_station.py::TestStation::test_repair_and_resupply_with_events PASSED                                                    [ 75%]
+tests/test_station.py::TestStation::test_station_systems PASSED                                                                    [ 77%]
+tests/test_station_events.py::TestStationEvents::test_docking_events PASSED                                                        [ 79%]
+tests/test_station_events.py::TestStationEvents::test_event_priorities PASSED                                                      [ 81%]
+tests/test_station_events.py::TestStationEvents::test_multiple_system_updates PASSED                                               [ 83%]
+tests/test_station_events.py::TestStationEvents::test_power_system_updates PASSED                                                  [ 84%]
+tests/test_station_events.py::TestStationEvents::test_station_initialization PASSED                                                [ 86%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_capacitor_charging PASSED                                                     [ 88%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_compatibility PASSED                                                   [ 90%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions PASSED                                               [ 92%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence PASSED                                                 [ 94%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_initialization PASSED                                                  [ 96%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_manager_integration PASSED                                             [ 98%]
+tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_power_requirements PASSED                                              [100%]
+
+================================================================ FAILURES ================================================================
+_________________________________________________ TestSectorManager.test_nearby_sectors __________________________________________________
+
+self = <tests.test_sector_manager.TestSectorManager testMethod=test_nearby_sectors>
+
+    def test_nearby_sectors(self):
+        """Test finding nearby sectors."""
+        # Create a central sector
+        center_pos = (100.0, 100.0, 100.0)
+        center_id = self.manager.get_sector_for_position(center_pos)
+    
+        # Create surrounding sectors
+        positions = [
+            (0.0, 100.0, 100.0),   # Left
+            (200.0, 100.0, 100.0), # Right
+            (100.0, 0.0, 100.0),   # Bottom
+            (100.0, 200.0, 100.0)  # Top
+        ]
+    
+        sector_ids = []
+        for pos in positions:
+            sector_id = self.manager.get_sector_for_position(pos)
+            sector_ids.append(sector_id)
+    
+        # Test finding nearby sectors
+        nearby = self.manager.get_nearby_sectors(center_pos, range_sectors=2)
+>       self.assertGreater(len(nearby), 1)
+E       AssertionError: 1 not greater than 1
+
+tests/test_sector_manager.py:80: AssertionError
+________________________________________________ TestSectorManager.test_sector_assignment ________________________________________________
+
+self = <tests.test_sector_manager.TestSectorManager testMethod=test_sector_assignment>
+
+    def test_sector_assignment(self):
+        """Test assigning objects to sectors."""
+        # Create test positions
+        pos1 = (50.0, 50.0, 50.0)
+        pos2 = (150.0, 50.0, 50.0)
+    
+        # Create sectors
+        sector1_id = self.manager.get_sector_for_position(pos1)
+        sector2_id = self.manager.get_sector_for_position(pos2)
+        self.assertIsNotNone(sector1_id)
+        self.assertIsNotNone(sector2_id)
+    
+        # Create test object
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, status, power_systems
+                    ) VALUES (
+                        'TEST-Moving-Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(%s, %s, %s), 3857),
+                        '{"active": true}'::jsonb,
+                        '{"main": {"exist": true}}'::jsonb
+                    ) RETURNING id
+                """, pos1)
+                result = cur.fetchone()
+                self.assertIsNotNone(result, "Failed to create test object")
+                obj_id = result[0]
+    
+        # Move object to new sector
+        self.manager.update_object_sector(obj_id, pos1, pos2)
+    
+        # Verify sector changed
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT sector_id FROM space_objects WHERE id = %s
+                """, (obj_id,))
+                result = cur.fetchone()
+>               self.assertIsNotNone(result, "Failed to find updated object")
+E               AssertionError: unexpectedly None : Failed to find updated object
+
+tests/test_sector_manager.py:123: AssertionError
+___________________________________________________ TestSpatialQueries.test_hit_chance ___________________________________________________
+
+self = <tests.test_spatial_queries.TestSpatialQueries testMethod=test_hit_chance>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+    
+        # Create test objects in space
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Clear previous test data and ensure PostGIS is enabled
+                cur.execute("DELETE FROM space_objects WHERE key LIKE 'Test%'")
+    
+                # Enable PostGIS extension
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                conn.commit()
+    
+                # Create a test ship
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, orientation, status, power_systems
+                    ) VALUES (
+                        'Test Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(0, 0, 0), 3857)::geometry(pointz, 3857),
+                        ST_SetSRID(ST_MakePoint(10, 0, 0), 3857)::geometry(pointz, 3857),
+                        %s,
+                        %s
+                    ) RETURNING id;
+                """, (
+                    json.dumps({"active": True}),
+                    json.dumps({"main": {"exist": True}})
+                ))
+E               psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+
+tests/test_spatial_queries.py:27: InvalidParameterValue
+________________________________________________ TestSpatialQueries.test_object_detection ________________________________________________
+
+self = <tests.test_spatial_queries.TestSpatialQueries testMethod=test_object_detection>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+    
+        # Create test objects in space
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Clear previous test data and ensure PostGIS is enabled
+                cur.execute("DELETE FROM space_objects WHERE key LIKE 'Test%'")
+    
+                # Enable PostGIS extension
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                conn.commit()
+    
+                # Create a test ship
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, orientation, status, power_systems
+                    ) VALUES (
+                        'Test Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(0, 0, 0), 3857)::geometry(pointz, 3857),
+                        ST_SetSRID(ST_MakePoint(10, 0, 0), 3857)::geometry(pointz, 3857),
+                        %s,
+                        %s
+                    ) RETURNING id;
+                """, (
+                    json.dumps({"active": True}),
+                    json.dumps({"main": {"exist": True}})
+                ))
+E               psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+
+tests/test_spatial_queries.py:27: InvalidParameterValue
+__________________________________________________ TestSpatialQueries.test_pathfinding ___________________________________________________
+
+self = <tests.test_spatial_queries.TestSpatialQueries testMethod=test_pathfinding>
+
+    def setUp(self):
+        """Set up test environment."""
+        super().setUp()
+    
+        # Create test objects in space
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                # Clear previous test data and ensure PostGIS is enabled
+                cur.execute("DELETE FROM space_objects WHERE key LIKE 'Test%'")
+    
+                # Enable PostGIS extension
+                cur.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                conn.commit()
+    
+                # Create a test ship
+>               cur.execute("""
+                    INSERT INTO space_objects (
+                        key, object_type, position, orientation, status, power_systems
+                    ) VALUES (
+                        'Test Ship',
+                        'ship',
+                        ST_SetSRID(ST_MakePoint(0, 0, 0), 3857)::geometry(pointz, 3857),
+                        ST_SetSRID(ST_MakePoint(10, 0, 0), 3857)::geometry(pointz, 3857),
+                        %s,
+                        %s
+                    ) RETURNING id;
+                """, (
+                    json.dumps({"active": True}),
+                    json.dumps({"main": {"exist": True}})
+                ))
+E               psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+
+tests/test_spatial_queries.py:27: InvalidParameterValue
+======================================================== short test summary info =========================================================
+FAILED tests/test_sector_manager.py::TestSectorManager::test_nearby_sectors - AssertionError: 1 not greater than 1
+FAILED tests/test_sector_manager.py::TestSectorManager::test_sector_assignment - AssertionError: unexpectedly None : Failed to find updated object
+FAILED tests/test_spatial_queries.py::TestSpatialQueries::test_hit_chance - psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+FAILED tests/test_spatial_queries.py::TestSpatialQueries::test_object_detection - psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+FAILED tests/test_spatial_queries.py::TestSpatialQueries::test_pathfinding - psycopg2.errors.InvalidParameterValue: Geometry type (Point) does not match column type (LineString)
+================================================ 5 failed, 47 passed, 1 skipped in 21.80s ================================================

@@ -1,0 +1,36 @@
+Looking at the test failure output, I can see the core issue is a mismatch between the geometry types in your PostGIS database and what you're trying to insert. The error message indicates that you're trying to insert Point geometries into columns that are defined as LineString geometries.
+Specifically, the error occurs when trying to insert spatial data for both the position and orientation columns:
+sqlCopyST_SetSRID(ST_MakePoint(0, 0, 0), 3857),  -- position
+ST_SetSRID(ST_MakePoint(10, 0, 0), 3857), -- orientation
+To fix this, you'll need to either:
+
+Modify your table schema to accept Point geometries for these columns, or
+Convert your Point data to LineString data before insertion
+
+Given that orientation seems to represent a direction, using a LineString might actually be more appropriate. Here's how you could fix the insert statement:
+pythonCopycur.execute("""
+    INSERT INTO space_objects (
+        key, object_type, position, orientation, status, power_systems
+    ) VALUES (
+        'Test Ship',
+        'ship',
+        ST_SetSRID(ST_MakeLine(
+            ST_MakePoint(0, 0, 0),
+            ST_MakePoint(0, 0, 0)
+        ), 3857),  -- Converting point to a zero-length line for position
+        ST_SetSRID(ST_MakeLine(
+            ST_MakePoint(0, 0, 0),
+            ST_MakePoint(10, 0, 0)
+        ), 3857),  -- orientation as a line from origin to direction vector
+        %s,
+        %s
+    ) RETURNING id;
+""", (
+    json.dumps({"active": True}),
+    json.dumps({"main": {"exist": True}})
+))
+However, if you really want to use Points instead of LineStrings, you'll need to modify your table schema. You can do this with an ALTER TABLE statement:
+sqlCopyALTER TABLE space_objects 
+    ALTER COLUMN position TYPE geometry(PointZ, 3857),
+    ALTER COLUMN orientation TYPE geometry(PointZ, 3857);
+Which approach would you prefer? Using LineStrings or modifying the schema to use Points? The choice depends on how you want to represent and work with these spatial attributes in your application.

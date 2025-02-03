@@ -1,0 +1,51 @@
+**Project Overview:**
+I have a design plan described in “Reason here3,” which outlines the development of a space-themed system using Evennia-like structures. Specifically, I need the following:
+1. A Python project setup.
+2. All required dependencies installed (including Evennia, although we will not run it).
+3. A “spaceobject.py” file containing the SpaceObject class.
+4. A “manager.py” file containing logic to manage SpaceObjects (the “manager code”).
+5. Placeholder command classes in separate files (e.g., “helm.py,” “engineering.py,” etc.) with commented explanations.
+6. Organization files (e.g., “federation.py,” etc.) with commented explanations.
+7. Comments in code explaining how everything would fit together or be used, but no actual running or testing of Evennia.
+8. Stop after the setup and file creation (do not run or try to start an Evennia server).
+
+---
+
+**Detailed Steps and Instructions:**
+
+1. **Create a new Python project** (if not already done).
+
+2. **Install necessary dependencies**:
+   - Install Evennia and any other dependencies required to demonstrate or stub out the basic structure (e.g., `pip install evennia`). 
+   - Note: We understand Evennia may not fully run here, but we want the environment set up for potential usage.
+
+3. **File Creation and Content**:
+   - **spaceobject.py**:  
+     - Create a `SpaceObject` class.  
+     - Add docstrings or inline comments explaining the purpose of `SpaceObject`, such as modeling ships, stations, etc.
+   
+   - **manager.py**:  
+     - Create a Manager class or set of functions that manage or track `SpaceObject` instances.  
+     - Include inline comments describing how this manager interacts with `SpaceObject` and other parts of the system.
+   
+   - **commands/** directory (create a folder named `commands`):  
+     - **helm.py**: Stub out a `HelmCommand` class (or similarly named class) with comments explaining how it would be used to control navigation.  
+     - **engineering.py**: Stub out an `EngineeringCommand` class (or similarly named class) with comments explaining how it would handle maintenance, repairs, etc.  
+     - (Feel free to add more command files if desired—just leave them as placeholders with comments about intended functionality.)
+   
+   - **organization/** directory (create a folder named `organization`):
+     - **federation.py**: Stub out a `Federation` class or module that could represent an in-game organization. Include comments describing how it interacts with `SpaceObject` and the commands.  
+     - (Similarly, create more organization files if necessary, each containing placeholder classes and explanatory comments.)
+
+   - Throughout **all** files, ensure there are **commented notes** explaining the functionality, how classes would be used, and their relationship to one another.
+
+4. **Do not attempt to run or configure Evennia** beyond installing it. We are only setting up the environment and creating the basic Python files. **Stop after everything is installed and the files are created.**
+
+5. **Final Note**: The goal is just to install dependencies and create the file structure with placeholders and explanatory comments. **Do not run or start Evennia.** Stop once the setup and file creation is complete.
+
+---
+
+**Confirmation:**
+- Please confirm the successful creation of the structure, installation of Evennia, and stop without attempting to run it.
+
+**End of Prompt**

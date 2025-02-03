@@ -1,0 +1,125 @@
+==================================================================== FAILURES =====================================================================
+_________________________________________________ TestWeaponSystem.test_weapon_firing_conditions __________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_conditions>
+
+    def test_weapon_firing_conditions(self):
+        """Test various weapon firing conditions"""
+        # Test firing with insufficient charge
+        self.ship.ndb.beam_capacitor = 0.0
+        self.test_beam._last_fired = time.time() - 10
+        success = self.test_beam.fire(self.ship)
+        self.assertFalse(success)
+    
+        # Test firing during cooldown
+        self.ship.ndb.beam_capacitor = 100.0
+        self.test_beam._last_fired = time.time()  # Just fired
+>       success = self.test_beam.fire(self.ship)
+
+tests/test_weapon_manager.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+managers/weapon_manager.py:54: in fire
+    utils.delay(self.cooldown, self._recharge, ship) #Added utils.delay call
+utils.py:17: in delay
+    asyncio.create_task(_delayed())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+coro = <coroutine object delay.<locals>._delayed at 0x7f1940acf3d0>
+
+    def create_task(coro, *, name=None, context=None):
+        """Schedule the execution of a coroutine object in a spawn task.
+    
+        Return a Task object.
+        """
+>       loop = events.get_running_loop()
+E       RuntimeError: no running event loop
+
+/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/asyncio/tasks.py:381: RuntimeError
+__________________________________________________ TestWeaponSystem.test_weapon_firing_sequence ___________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_firing_sequence>
+
+    def test_weapon_firing_sequence(self):
+        """Test complete weapon firing sequence"""
+        # Set up capacitor
+        self.ship.ndb.beam_capacitor = 50.0
+        initial_charge = self.ship.ndb.beam_capacitor
+    
+        # Fire weapon
+        self.test_beam._last_fired = time.time() - 10  # Ensure weapon is ready
+>       success = self.test_beam.fire(self.ship)
+
+tests/test_weapon_manager.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+managers/weapon_manager.py:54: in fire
+    utils.delay(self.cooldown, self._recharge, ship) #Added utils.delay call
+utils.py:17: in delay
+    asyncio.create_task(_delayed())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+coro = <coroutine object delay.<locals>._delayed at 0x7f1940acf970>
+
+    def create_task(coro, *, name=None, context=None):
+        """Schedule the execution of a coroutine object in a spawn task.
+    
+        Return a Task object.
+        """
+>       loop = events.get_running_loop()
+E       RuntimeError: no running event loop
+
+/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/asyncio/tasks.py:381: RuntimeError
+________________________________________________ TestWeaponSystem.test_weapon_manager_integration _________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_manager_integration>
+
+    def test_weapon_manager_integration(self):
+        """Test weapon manager integration"""
+        manager = self.ship.ndb.weapon_manager
+        self.assertIsNotNone(manager)
+        self.assertEqual(len(manager.weapons), 0)
+    
+        # Add weapon
+>       manager.add_weapon(self.test_beam)
+E       AttributeError: 'WeaponManager' object has no attribute 'add_weapon'
+
+tests/test_weapon_manager.py:114: AttributeError
+_________________________________________________ TestWeaponSystem.test_weapon_power_requirements _________________________________________________
+
+self = <tests.test_weapon_manager.TestWeaponSystem testMethod=test_weapon_power_requirements>
+
+    def test_weapon_power_requirements(self):
+        """Test weapon power consumption"""
+        initial_power = 100.0
+        self.ship.ndb.beam_capacitor = initial_power
+    
+        # Fire weapon
+        self.test_beam._last_fired = time.time() - 10
+>       success = self.test_beam.fire(self.ship)
+
+tests/test_weapon_manager.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+managers/weapon_manager.py:54: in fire
+    utils.delay(self.cooldown, self._recharge, ship) #Added utils.delay call
+utils.py:17: in delay
+    asyncio.create_task(_delayed())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+coro = <coroutine object delay.<locals>._delayed at 0x7f1940b78130>
+
+    def create_task(coro, *, name=None, context=None):
+        """Schedule the execution of a coroutine object in a spawn task.
+    
+        Return a Task object.
+        """
+>       loop = events.get_running_loop()
+E       RuntimeError: no running event loop
+
+/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/asyncio/tasks.py:381: RuntimeError
+============================================================= short test summary info =============================================================
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_conditions - RuntimeError: no running event loop
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_firing_sequence - RuntimeError: no running event loop
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_manager_integration - AttributeError: 'WeaponManager' object has no attribute 'add_weapon'
+FAILED tests/test_weapon_manager.py::TestWeaponSystem::test_weapon_power_requirements - RuntimeError: no running event loop
+=========================================================== 4 failed, 3 passed in 0.15s ===========================================================
+sys:1: RuntimeWarning: coroutine 'delay.<locals>._delayed' was never awaited
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback

@@ -1,0 +1,105 @@
+Sector & Full SU Coordinates for Earth (Terra)
+Sector Calculation (PC-based)
+Earth's Parsecs (PC) Coordinates:
+
+X: -9174.044174 PC
+Y: 61.8 PC
+Z: 0 PC
+Sectors are 10×10 parsecs
+
+Sector numbering starts from (0,0) outward, meaning Earth's sector is:
+Sector: A-917.4.6
+
+Full Space Unit (SU) Coordinates for Earth
+Since 1 parsec = 3,085,659,622.014257 SU, we calculate:
+
+X (SU) = -9174.044174 PC × 3,085,659,622.014257 SU/PC
+X (SU) ≈ -28,314,645,443,006.17 SU
+
+Y (SU) = 61.8 PC × 3,085,659,622.014257 SU/PC
+Y (SU) ≈ 190,778,717,741.2659 SU
+
+Z (SU) = 0 PC × 3,085,659,622.014257 SU/PC
+Z (SU) = 0 SU
+
+Key Takeaways
+Earth's location is stored in full SU precision:
+(-28.3 trillion, 190 billion, 0) SU
+For system readability, it's converted to PC and placed in a sector:
+Sector A-917.4.6
+The SU system maintains extreme precision, but using parsecs makes it manageable for players and UI readability.
+This reinforces your approach: Space Units (SU) store exact positions, but Parsecs (PC) and Sectors provide human-readable organization. 🚀
+
+
+
+
+
+
+
+
+You said:
+ok and what sector is earth in?
+ChatGPT said:
+ChatGPT
+Earth's Sector Calculation
+Step 1: Earth's Position in Parsecs (PC)
+X: -9174.044174 PC
+Y: 61.8 PC
+Z: 0 PC
+Step 2: Sector Determination
+Sectors are 10×10 parsecs
+The sector ID is determined by dividing the X and Y coordinates by 10
+Sector X = floor(-9174.044174 / 10) = -918
+Sector Y = floor(61.8 / 10) = 6
+Final Sector ID for Earth
+Sector: A-918.6
+
+This confirms that Earth is located in Sector A-918.6, positioned far from the Galactic Center, reinforcing how the sector system organizes space into manageable regions while SU coordinates retain full precision. 🚀
+
+
+
+
+
+
+
+You said:
+Planet	Antos IV	-9179.844174	-20.4	-6.1
+ChatGPT said:
+ChatGPT
+Sector & Full SU Coordinates for Antos IV
+Step 1: Antos IV's Position in Parsecs (PC)
+X: -9179.844174 PC
+Y: -20.4 PC
+Z: -6.1 PC
+Step 2: Sector Determination
+Sectors are 10×10 parsecs
+Sector ID is determined by dividing the X and Y coordinates by 10:
+Sector X = floor(-9179.844174 / 10) = -918
+Sector Y = floor(-20.4 / 10) = -3
+Final Sector ID for Antos IV
+Sector: A-918.-3
+
+Full Space Unit (SU) Coordinates for Antos IV
+Since 1 parsec = 3,085,659,622.014257 SU, we calculate:
+
+X (SU) = -9179.844174 PC × 3,085,659,622.014257 SU/PC
+X (SU) ≈ -28,330,695,746,116.65 SU
+
+Y (SU) = -20.4 PC × 3,085,659,622.014257 SU/PC
+Y (SU) ≈ -62,551,457,296.09163 SU
+
+Z (SU) = -6.1 PC × 3,085,659,622.014257 SU/PC
+Z (SU) ≈ -18,822,523,694.28797 SU
+
+Key Takeaways
+Antos IV’s exact position is stored in SU precision:
+(-28.3 trillion, -62.5 billion, -18.8 billion) SU
+For system readability, it’s placed in:
+Sector A-918.-3
+SU ensures precise tracking, while PC-based sectors make navigation practical. 🚀
+
+
+
+
+
+

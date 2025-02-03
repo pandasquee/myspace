@@ -1,0 +1,85 @@
+✅ Immediate Fix for the asyncio Event Loop Issue
+Your error (RuntimeError: There is no current event loop in thread 'MainThread') happens because:
+
+Pytest doesn’t automatically create an event loop for async tests.
+Your PriorityEventManager is trying to get an event loop before one exists.
+🔥 Fix: Ensure an Event Loop Exists Before Using It
+Modify your PriorityEventManager class in priority_manager.py:
+
+python
+Copy
+Edit
+import asyncio
+
+class PriorityEventManager:
+    def __init__(self):
+        """Ensure an event loop exists and use it."""
+        try:
+            self._loop = asyncio.get_running_loop()  # ✅ Get existing loop if available
+        except RuntimeError:
+            self._loop = asyncio.new_event_loop()  # ✅ Create a new loop if none exists
+            asyncio.set_event_loop(self._loop)
+Why This Works
+asyncio.get_running_loop() returns the current event loop if one exists.
+If no loop exists, it creates one and sets it as the default.
+This prevents RuntimeError: There is no current event loop.
+✅ Fix for Pytest Async Test Failures
+Your tests are failing because they don’t run inside an event loop.
+
+🔥 Fix: Use pytest-asyncio to Run Async Tests Correctly
+Install pytest-asyncio (if not installed yet):
+
+bash
+Copy
+Edit
+pip install pytest-asyncio
+Modify your test file (test_priority_manager.py):
+
+python
+Copy
+Edit
+import pytest
+import asyncio
+from managers.events.priority_manager import PriorityEventManager
+
+@pytest.fixture
+async def event_manager():
+    """Fixture providing a clean event manager for each test"""
+    return PriorityEventManager()
+
+@pytest.mark.asyncio
+async def test_delayed_events(event_manager):
+    """Ensure delayed events are scheduled correctly"""
+    # Example async test code
+    await asyncio.sleep(0.1)  # Simulate delay
+    assert event_manager is not None
+Why This Works
+✅ @pytest.mark.asyncio ensures tests run inside an async event loop.
+✅ async def test functions prevent blocking the event loop.
+✅ asyncio.sleep() simulates delays correctly in async tests.
+
+✅ Fix for get_event_manager() Global Instance
+Your function creates an event manager instance, but it crashes due to no event loop.
+Modify get_event_manager():
+
+python
+Copy
+Edit
+import asyncio
+_EVENT_MANAGER = None
+
+def get_event_manager():
+    global _EVENT_MANAGER
+    if _EVENT_MANAGER is None:
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        _EVENT_MANAGER = PriorityEventManager()
+    return _EVENT_MANAGER
+🚀 Summary of Fixes
+Ensure an event loop exists in PriorityEventManager (asyncio.get_running_loop() or new_event_loop()).
+Use pytest-asyncio to correctly run async tests.
+Fix get_event_manager() to always work inside an event loop.

@@ -1,0 +1,167 @@
+🛠 Prompt:
+Project Goal:
+
+Implement PostGIS utilities for real-time space tracking, targeting, and combat mechanics in Evennia.
+Enhance our existing utils.py with PostGIS spatial queries to optimize sensor scans, line of sight (LOS), pathfinding, and weapon accuracy calculations.
+Ensure that our system remains lightweight by using simple points and linestrings, rather than complex geometries.
+💡 Step 1: Setting Up PostGIS
+✅ Ensure PostgreSQL & PostGIS are installed
+
+bash
+Copy
+Edit
+sudo apt update && sudo apt install postgresql postgis
+✅ Enable PostGIS on our Evennia database
+
+sql
+Copy
+Edit
+CREATE EXTENSION postgis;
+✅ Create a table for ships and space objects
+
+sql
+Copy
+Edit
+CREATE TABLE space_objects (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    object_type TEXT NOT NULL CHECK (object_type IN ('ship', 'station', 'asteroid', 'nebula')),
+    position GEOMETRY(PointZ, 4326),
+    velocity GEOMETRY(PointZ, 4326),
+    sector_id INT
+);
+🛠 Step 2: Implement Core Utilities in utils.py
+📍 1. Get Distance Between Two Objects
+python
+Copy
+Edit
+import psycopg2
+
+def get_distance(x1, y1, z1, x2, y2, z2):
+    """Calculate distance using PostGIS ST_Distance."""
+    query = """
+    SELECT ST_Distance(
+        ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326),
+        ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326)
+    );
+    """
+    with psycopg2.connect("dbname=evennia user=postgres") as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (x1, y1, z1, x2, y2, z2))
+            return cur.fetchone()[0]  # Returns distance in SU
+👁️ 2. Check Line of Sight (LOS)
+python
+Copy
+Edit
+def has_line_of_sight(x1, y1, z1, x2, y2, z2):
+    """Determine if LOS is clear between two points."""
+    query = """
+    SELECT COUNT(*) FROM space_objects
+    WHERE object_type IN ('asteroid', 'nebula', 'station')
+    AND ST_Intersects(
+        ST_MakeLine(
+            ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326),
+            ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326)
+        ),
+        position
+    );
+    """
+    with psycopg2.connect("dbname=evennia user=postgres") as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (x1, y1, z1, x2, y2, z2))
+            return cur.fetchone()[0] == 0  # True if no obstacles
+🎯 3. Calculate Weapon Hit Chance (Using Angular Velocity)
+python
+Copy
+Edit
+def calculate_hit_chance(x1, y1, z1, v1x, v1y, v1z, x2, y2, z2, v2x, v2y, v2z, weapon_tracking_speed, time_interval):
+    """Compute angular velocity and determine hit probability."""
+    query = """
+    SELECT 
+        degrees(ST_Angle(
+            ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326),
+            ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326)
+        )) / %s AS av;
+    """
+    with psycopg2.connect("dbname=evennia user=postgres") as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (x1, y1, z1, x2, y2, z2, time_interval))
+            av = cur.fetchone()[0]  # Angular Velocity in degrees per second
+
+    # Calculate hit probability
+    hit_chance = max(0, 1.0 - (av / weapon_tracking_speed))
+    return hit_chance
+📡 4. Detect Ships in Sensor Range
+python
+Copy
+Edit
+def get_detectable_ships(x, y, z, sensor_range):
+    """Find all ships within sensor range using PostGIS."""
+    query = """
+    SELECT id, name, ST_X(position), ST_Y(position), ST_Z(position)
+    FROM space_objects
+    WHERE ST_DWithin(
+        position, ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326),
+        %s
+    );
+    """
+    with psycopg2.connect("dbname=evennia user=postgres") as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (x, y, z, sensor_range))
+            return cur.fetchall()
+🚀 5. Get Best Movement Path (Pathfinding)
+python
+Copy
+Edit
+def find_best_path(x1, y1, z1, x2, y2, z2):
+    """Check if a direct path is clear; if not, return alternative route."""
+    query = """
+    SELECT COUNT(*) FROM space_objects
+    WHERE object_type IN ('asteroid', 'nebula', 'station')
+    AND ST_Intersects(
+        ST_MakeLine(
+            ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326),
+            ST_SetSRID(ST_MakePoint(%s, %s, %s), 4326)
+        ),
+        position
+    );
+    """
+    with psycopg2.connect("dbname=evennia user=postgres") as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (x1, y1, z1, x2, y2, z2))
+            count = cur.fetchone()[0]
+
+    if count == 0:
+        return [(x2, y2, z2)]  # Direct path is clear
+
+    # If blocked, return alternative route
+    return [(x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, z1 + (z2 - z1) / 2)]
+🛠 Step 3: Testing & Integration
+✅ Test PostGIS Queries
+
+bash
+Copy
+Edit
+psql -d evennia -c "SELECT * FROM space_objects LIMIT 10;"
+✅ Run Python Functions
+
+python
+Copy
+Edit
+print(get_distance(100, 200, 0, 500, 600, 0))
+print(has_line_of_sight(0, 0, 0, 1000, 1000, 0))
+print(calculate_hit_chance(0,0,0,10,10,0,100,100,0,0,0,0,30,2))
+print(get_detectable_ships(500, 500, 0, 1000))
+📌 Expected Outcomes
+Feature	Expected Result
+Get Distance	Returns the 3D distance between two points
+LOS Check	Returns True if the path is clear, False if blocked
+Weapon Hit Chance	Returns a probability (1.0 = certain hit, 0.0 = miss)
+Sensor Scan	Returns a list of ships detected within range
+Pathfinding	Returns coordinates of the best movement path
+📜 Final Notes
+This Replit Assistant prompt will:
+
+Create PostGIS-powered spatial functions for distance, LOS, pathfinding, sensors, and combat.
+Enhance Evennia’s movement & targeting system to be database-driven.
+Optimize real-time tracking while keeping processing lightweight.
