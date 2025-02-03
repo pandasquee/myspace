@@ -1,3 +1,4 @@
+
 """
 Test configuration and fixtures.
 """
@@ -12,7 +13,7 @@ sys.path.insert(0, str(project_root))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myspace.server.conf.settings')
 os.environ.setdefault('DJANGO_ALLOW_ASYNC_UNSAFE', 'true')
 
-# Initialize Django
+# Initialize Django before importing models
 import django
 django.setup()
 
@@ -25,16 +26,22 @@ from unittest.mock import MagicMock
 def pytest_configure(config):
     """Set up test environment."""
     setup_test_environment()
-
-    # Ensure database exists and is migrated
+    
+    # Create database tables
     connection.ensure_connection()
     try:
-        # Create contenttypes first
+        # First migrate contenttypes
         call_command('migrate', 'contenttypes', verbosity=0)
-        # Then run all other migrations
-        call_command('migrate', '--noinput', verbosity=0)
-        # Load initial data
-        call_command('loaddata', 'tests/fixtures/initial_data.json', verbosity=0)
+        # Then migrate auth since it depends on contenttypes
+        call_command('migrate', 'auth', verbosity=0)
+        # Then migrate evennia apps
+        call_command('migrate', 'typeclasses', verbosity=0)
+        call_command('migrate', 'objects', verbosity=0)
+        call_command('migrate', 'scripts', verbosity=0)
+        call_command('migrate', 'comms', verbosity=0)
+        call_command('migrate', 'help', verbosity=0)
+        # Finally run any remaining migrations
+        call_command('migrate', verbosity=0)
     except Exception as e:
         print(f"Setup failed: {e}")
         raise
@@ -52,6 +59,7 @@ class MockAttributeStorage:
             super().__setattr__(name, value)
         else:
             self._storage[name] = value
+
 class MockSession:
     """Mock session for command testing."""
     def __init__(self):
