@@ -72,10 +72,19 @@ ALLOWED_HOSTS = ['*']
 WEBSERVER_INTERFACES = ['0.0.0.0']
 WEBSOCKET_CLIENT_INTERFACE = '0.0.0.0'
 
-# Port configuration
+# Port configuration - Bind to all interfaces
 WEBSERVER_PORTS = [4001]
 WEBSOCKET_CLIENT_PORT = 4002
 TELNET_PORTS = [4000]
+SERVER_SERVICES_PORT = 4005
+IRC_PORT = 4004
+RSS_PORT = 4003
+
+# Ensure servers bind to all interfaces
+AMP_HOST = '0.0.0.0'
+WEBSERVER_INTERFACES = ['0.0.0.0']
+TELNET_INTERFACES = ['0.0.0.0']
+WEBSOCKET_CLIENT_INTERFACE = '0.0.0.0'
 
 # Important: Ensure migrations run in correct order
 MIGRATION_MODULES = {
