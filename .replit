@@ -11,37 +11,16 @@ name = "Project"
 mode = "parallel"
 author = "agent"
 
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python managers/main.py"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Space Engine Tests"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Simplified Tests"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Complete Engine Tests"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Priority Manager Tests"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Space Engine Test"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Basic Tests"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Evennia Server"
+args = "cd myspace && python -c 'from evennia.utils.create_settings_file import create_settings_file; create_settings_file()' && evennia migrate && evennia start --settings settings"
+waitForPort = 4001
 
 [[workflows.workflow]]
 name = "Space Engine Test"

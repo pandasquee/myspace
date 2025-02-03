@@ -1,30 +1,7 @@
-r"""
-Evennia settings file.
-
-The available options are found in the default settings file found
-here:
-
-https://www.evennia.com/docs/latest/Setup/Settings-Default.html
-
-Remember:
-
-Don't copy more from the default file than you actually intend to
-change; this will make sure that you don't overload upstream updates
-unnecessarily.
-
-When changing a setting requiring a file system path (like
-path/to/actual/file.py), use GAME_DIR and EVENNIA_DIR to reference
-your game folder and the Evennia library folders respectively. Python
-paths (path.to.module) should be given relative to the game's root
-folder (typeclasses.foo) whereas paths within the Evennia library
-needs to be given explicitly (evennia.foo).
-
-If you want to share your game dir, including its settings, you can
-put secret game- or server-specific settings in secret_settings.py.
-
 """
-
-# Use the defaults from Evennia unless explicitly overridden
+Evennia settings file.
+"""
+import os
 from evennia.settings_default import *
 
 ######################################################################
@@ -34,6 +11,30 @@ from evennia.settings_default import *
 # This is the name of your game. Make it catchy!
 SERVERNAME = "myspace"
 
+# Server ports configuration for deployment
+TELNET_PORTS = [4000]
+WEBSERVER_PORTS = [4001]
+WEBSOCKET_CLIENT_PORT = 4002
+WEBSOCKET_CLIENT_INTERFACE = '0.0.0.0'
+WEBSERVER_INTERFACES = ['0.0.0.0']
+TELNET_INTERFACES = ['0.0.0.0']
+ALLOWED_HOSTS = ['*']
+
+# Debug settings for deployment
+DEBUG = True  # Set to False in production
+ADMINS = []
+
+# Database configuration from environment
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT'),
+    }
+}
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
