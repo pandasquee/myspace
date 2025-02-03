@@ -22,6 +22,16 @@ from django.core.management import call_command
 from django.test.utils import setup_test_environment
 from django.db import connection
 from unittest.mock import MagicMock
+from django.test import TestCase
+
+class BaseTest(TestCase):
+    """Base test class for all tests."""
+    def setUp(self):
+        """Set up test fixtures."""
+        super().setUp()
+        self.char1 = MockCharacter()
+        self.char1.location = MockRoom()
+        self.char1.location.db.alloc = {"shields": 0}
 
 def pytest_configure(config):
     """Set up test environment."""
