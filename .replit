@@ -20,7 +20,14 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd myspace && evennia migrate && evennia -l DEBUG start"
-waitForPort = 80
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Space Engine"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Core Tests"
 
 [[workflows.workflow]]
 name = "Space Engine Test"
@@ -222,11 +229,18 @@ args = "python -m pytest tests/test_sensor_manager.py tests/test_alpha_deploymen
 
 [[workflows.workflow]]
 name = "Space Engine"
-author = 39266229
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd myspace && evennia -l DEBUG migrate && evennia -l DEBUG start"
+waitForPort = 80
 
 [[workflows.workflow]]
 name = "Basic Tests"
@@ -256,6 +270,20 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd myspace && python -c 'from evennia.utils.create_settings_file import create_settings_file; create_settings_file()' && evennia migrate && evennia start --settings settings"
 waitForPort = 80
+
+[[workflows.workflow]]
+name = "Core Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/test_power_manager.py tests/test_spatial_queries.py -v"
 
 [deployment]
 run = ["python", "managers/main.py"]
