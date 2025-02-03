@@ -19,8 +19,8 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd myspace && python -c 'from evennia.utils.create_settings_file import create_settings_file; create_settings_file()' && evennia migrate && evennia start --settings settings"
-waitForPort = 4001
+args = "cd myspace && evennia migrate && evennia -l DEBUG start"
+waitForPort = 80
 
 [[workflows.workflow]]
 name = "Space Engine Test"
@@ -254,8 +254,8 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd myspace && evennia migrate && evennia start --settings settings"
-waitForPort = 4001
+args = "cd myspace && python -c 'from evennia.utils.create_settings_file import create_settings_file; create_settings_file()' && evennia migrate && evennia start --settings settings"
+waitForPort = 80
 
 [deployment]
 run = ["python", "managers/main.py"]
