@@ -1,0 +1,83 @@
+ERROR: No Evennia settings file was found. Evennia looks for the
+    file in your game directory as ./server/conf/settings.py.
+
+    You must run this command from somewhere inside a valid game
+    directory first created with
+
+        evennia --init mygamename
+
+    If you are in a game directory but is missing a settings.py file,
+    it may be because you have git-cloned an existing game directory.
+    The settings.py file is not cloned by git (it's in .gitignore)
+    since it can contain sensitive and/or server-specific information.
+    You can create a new, empty settings file with
+
+        evennia --initsettings
+
+    If cloning the settings file is not a problem you could manually
+    copy over the old settings file or remove its entry in .gitignore
+
+    
+
+    ERROR: No Evennia settings file was found. Evennia looks for the
+    file in your game directory as ./server/conf/settings.py.
+
+    You must run this command from somewhere inside a valid game
+    directory first created with
+
+        evennia --init mygamename
+
+    If you are in a game directory but is missing a settings.py file,
+    it may be because you have git-cloned an existing game directory.
+    The settings.py file is not cloned by git (it's in .gitignore)
+    since it can contain sensitive and/or server-specific information.
+    You can create a new, empty settings file with
+
+        evennia --initsettings
+
+    If cloning the settings file is not a problem you could manually
+    copy over the old settings file or remove its entry in .gitignore
+
+    
+
+    ERROR: No Evennia settings file was found. Evennia looks for the
+    file in your game directory as ./server/conf/settings.py.
+
+    You must run this command from somewhere inside a valid game
+    directory first created with
+
+        evennia --init mygamename
+
+    If you are in a game directory but is missing a settings.py file,
+    it may be because you have git-cloned an existing game directory.
+    The settings.py file is not cloned by git (it's in .gitignore)
+    since it can contain sensitive and/or server-specific information.
+    You can create a new, empty settings file with
+
+        evennia --initsettings
+
+    If cloning the settings file is not a problem you could manually
+    copy over the old settings file or remove its entry in .gitignore
+
+    
+
+    ERROR: No Evennia settings file was found. Evennia looks for the
+    file in your game directory as ./server/conf/settings.py.
+
+    You must run this command from somewhere inside a valid game
+    directory first created with
+
+        evennia --init mygamename
+
+    If you are in a game directory but is missing a settings.py file,
+    it may be because you have git-cloned an existing game directory.
+    The settings.py file is not cloned by git (it's in .gitignore)
+    since it can contain sensitive and/or server-specific information.
+    You can create a new, empty settings file with
+
+        evennia --initsettings
+
+    If cloning the settings file is not a problem you could manually
+    copy over the old settings file or remove its entry in .gitignore
+
+    
