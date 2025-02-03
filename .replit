@@ -39,6 +39,10 @@ args = "Space Engine Test"
 task = "workflow.run"
 args = "Basic Tests"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Evennia Server"
+
 [[workflows.workflow]]
 name = "Space Engine Test"
 author = "agent"
@@ -258,6 +262,21 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python -m pytest tests/test_bridge_commands.py -v"
+
+[[workflows.workflow]]
+name = "Evennia Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd myspace && evennia migrate && evennia start --settings settings"
+waitForPort = 4001
 
 [deployment]
 run = ["python", "managers/main.py"]
