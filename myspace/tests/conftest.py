@@ -10,7 +10,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myspace.server.conf.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.conf.settings')
 os.environ.setdefault('DJANGO_ALLOW_ASYNC_UNSAFE', 'true')
 
 # Initialize Django before importing models
